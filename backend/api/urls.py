@@ -6,7 +6,7 @@ from .views import (
     ScheduleViewSet, ExamViewSet, TodoViewSet,
     
     RegisterView, LoginWithCookieView, LogoutView, 
-    MeView, ProfileUpdateView, ChangePasswordView, VerifyOTPView ,CohortMessageListCreateView,
+    MeView, ProfileUpdateView, ChangePasswordView,CohortMessageListCreateView,
     SendPasswordOTPView, ChangePasswordWithOTPView
 )
 
@@ -31,7 +31,6 @@ urlpatterns = [
     path('profile/update/', ProfileUpdateView.as_view(), name='profile-update'),
     path('profile/change-password/', ChangePasswordView.as_view(), name='change-password'),
 
-    path('verify-otp/', VerifyOTPView.as_view(), name='verify-otp'),
     path('chats/', CohortMessageListCreateView.as_view(), name='cohort-chats'),
 
     path('profile/change-password/request-otp/', SendPasswordOTPView.as_view(), name='change-password-request-otp'),
