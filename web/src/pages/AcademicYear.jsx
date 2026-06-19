@@ -69,7 +69,7 @@ function AcademicCard({ department }) {
   const Icon = department.icon;
 
   return (
-    <article className="relative min-h-[260px] rounded-[16px] border border-[#DDDDF2] bg-white p-7 shadow-[0_10px_25px_rgba(29,33,78,0.03)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_35px_rgba(29,33,78,0.08)]">
+    <article className="relative min-h-[240px] sm:min-h-[260px] rounded-[16px] border border-[#DDDDF2] bg-white p-5 sm:p-7 shadow-[0_10px_25px_rgba(29,33,78,0.03)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_35px_rgba(29,33,78,0.08)]">
       <div
         className="absolute left-0 top-0 h-full w-1.5 rounded-l-[16px]"
         style={{ backgroundColor: department.color }}
@@ -87,8 +87,8 @@ function AcademicCard({ department }) {
         </span>
       </div>
 
-      <div className="mt-16">
-        <h3 className="text-[21px] font-bold leading-tight text-[#25264F]">
+      <div className="mt-10 sm:mt-16">
+        <h3 className="text-[19px] sm:text-[21px] font-bold leading-tight text-[#25264F]">
           {department.title}
         </h3>
         <p className="mt-3 min-h-[54px] text-[13px] font-medium leading-relaxed text-[#64617A]">
@@ -112,21 +112,21 @@ export default function AcademicYear() {
     <div className="flex min-h-screen bg-[#F5F5FA] font-sans text-left" dir="ltr">
       <SideBar />
 
-      <main className="flex-1 overflow-y-auto">
-        <header className="flex items-center justify-between border-b border-[#E6E2F0] bg-white px-10 py-5">
+      <main className="flex-1 w-full min-w-0 overflow-y-auto">
+        <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-[#E6E2F0] bg-white px-4 sm:px-6 lg:px-10 py-4 sm:py-5">
           <div className="flex items-center gap-3 text-[13px] font-bold text-[#7F78A8]">
             <span>Academic</span>
             <span className="text-[#C4BED8]">›</span>
             <span className="text-[#2B2B57]">Departments</span>
           </div>
 
-          <div className="flex items-center gap-6">
-            <label className="relative hidden sm:block">
+          <div className="flex w-full sm:w-auto items-center gap-3 sm:gap-6">
+            <label className="relative block flex-1 sm:flex-none">
               <IoSearchOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-[#77709A]" />
               <input
                 type="search"
                 placeholder="Search courses..."
-                className="h-10 w-[260px] rounded-full bg-[#F1ECFA] pl-11 pr-4 text-[13px] font-semibold text-[#2B2B57] outline-none placeholder:text-[#9A94B5] focus:ring-2 focus:ring-[#4E58CA]/30"
+                className="h-10 w-full sm:w-[260px] rounded-full bg-[#F1ECFA] pl-11 pr-4 text-[13px] font-semibold text-[#2B2B57] outline-none placeholder:text-[#9A94B5] focus:ring-2 focus:ring-[#4E58CA]/30"
               />
             </label>
             <div className="flex h-10 w-10 items-center justify-center rounded-full text-[#2B2B57] transition-colors hover:bg-[#F1ECFA]">
@@ -135,16 +135,16 @@ export default function AcademicYear() {
           </div>
         </header>
 
-        <section className="px-10 py-10">
+        <section className="px-4 sm:px-6 lg:px-10 py-8 sm:py-10">
           <div className="mb-10 max-w-[720px]">
             <div className="mb-4 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.32em] text-[#4E58CA]">
               <IoBookOutline size={14} />
               Curriculum
             </div>
-            <h1 className="text-[42px] font-extrabold leading-tight tracking-tight text-[#2A274D]">
+            <h1 className="text-[32px] sm:text-[42px] font-extrabold leading-tight tracking-tight text-[#2A274D]">
               Academic <span className="text-[#4E58CA]">Departments</span>
             </h1>
-            <p className="mt-5 text-[16px] font-medium leading-relaxed text-[#64617A]">
+            <p className="mt-5 text-[14px] sm:text-[16px] font-medium leading-relaxed text-[#64617A]">
               Explore specialized faculties and discover over 450 subjects curated
               for your academic journey. Filter by department to see specific degree
               requirements and elective options.

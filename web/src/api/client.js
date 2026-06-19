@@ -1,10 +1,15 @@
-import { API_BASE_URL } from "./config";
+import { env } from "../environment/environment";
 
 const TOKEN_KEY = "access_token";
 const REFRESH_KEY = "refresh_token";
 
 export function getToken() {
-  return localStorage.getItem(TOKEN_KEY);
+  const token =
+    localStorage.getItem(TOKEN_KEY) ||
+    localStorage.getItem("access") ||
+    localStorage.getItem("jwt");
+
+  return token && token !== "authenticated" ? token : null;
 }
 
 export function setTokens(accessToken, refreshToken) {
@@ -29,6 +34,31 @@ function extractTokensFromSetCookie(setCookieHeader) {
   };
 }
 
+function extractTokensFromData(data) {
+  if (!data || typeof data !== "object") return {};
+
+  const source = data.tokens || data.token || data.auth || data;
+  const accessToken =
+    source.access_token ||
+    source.access ||
+    source.accessToken ||
+    source.jwt ||
+    (typeof source.token === "string" ? source.token : null);
+  const refreshToken =
+    source.refresh_token ||
+    source.refresh ||
+    source.refreshToken ||
+    null;
+
+  return { accessToken, refreshToken };
+}
+
+export function persistTokensFromData(data) {
+  const { accessToken, refreshToken } = extractTokensFromData(data);
+  setTokens(accessToken, refreshToken);
+  return { accessToken, refreshToken };
+}
+
 function buildAuthHeaders() {
   const token = getToken();
   if (!token) return {};
@@ -36,6 +66,14 @@ function buildAuthHeaders() {
   return {
     Authorization: `JWT ${token}`,
   };
+}
+
+function buildApiUrl(path) {
+  if (/^https?:\/\//i.test(path)) return path;
+
+  const baseUrl = env.baseUrl.replace(/\/+$/, "");
+  const endpoint = path.startsWith("/") ? path : `/${path}`;
+  return `${baseUrl}${endpoint}`;
 }
 
 export async function apiRequest(path, options = {}) {
@@ -49,7 +87,7 @@ export async function apiRequest(path, options = {}) {
     ...(auth ? buildAuthHeaders() : {}),
   };
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetch(buildApiUrl(path), {
     credentials: "include",
     ...rest,
     headers: requestHeaders,
@@ -66,6 +104,8 @@ export async function apiRequest(path, options = {}) {
   const data = contentType.includes("application/json")
     ? await response.json().catch(() => null)
     : await response.text().catch(() => null);
+
+  persistTokensFromData(data);
 
   if (!response.ok) {
     const message =

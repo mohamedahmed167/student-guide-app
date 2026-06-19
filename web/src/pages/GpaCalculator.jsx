@@ -63,42 +63,42 @@ export default function GpaCalculator() {
   return (
     <div className="flex min-h-screen bg-[#F5F5FA] font-sans text-left" dir="ltr">
       <SideBar />
-      <div className="flex-1 p-10 overflow-y-auto">
+      <div className="flex-1 w-full min-w-0 p-4 sm:p-6 lg:p-10 overflow-y-auto">
         
         {/* Header Section */}
-        <div className="flex justify-between items-start mb-10">
-          <div className="max-w-[60%]">
+        <div className="flex flex-col gap-5 sm:flex-row sm:justify-between sm:items-start mb-8 lg:mb-10">
+          <div className="max-w-full sm:max-w-[70%]">
             <span className="inline-block bg-[#EBEBFF] text-[#4E58CA] text-[11px] font-bold tracking-widest px-3 py-1.5 rounded-full mb-3 uppercase">
               Academic Tool
             </span>
-            <h1 className="text-[36px] font-bold text-[#1D214E] tracking-tight leading-tight mb-2">
+            <h1 className="text-[28px] sm:text-[36px] font-bold text-[#1D214E] tracking-tight leading-tight mb-2">
               GPA Strategy
             </h1>
-            <p className="text-[#7F8A9E] text-[16px] font-medium leading-relaxed">
-              Simulate your semester outcomes and plan your path to<br/>academic excellence with precision.
+            <p className="text-[#7F8A9E] text-[14px] sm:text-[16px] font-medium leading-relaxed">
+              Simulate your semester outcomes and plan your path to academic excellence with precision.
             </p>
           </div>
-          <button onClick={handleAddSubject} className="flex items-center gap-2 bg-[#066F5B] text-white px-6 py-3.5 rounded-full font-bold text-[14px] shadow-[0_8px_20px_rgba(6,111,91,0.25)] hover:bg-[#055b4b] transition-colors mt-2">
+          <button onClick={handleAddSubject} className="flex w-full sm:w-auto items-center justify-center gap-2 bg-[#066F5B] text-white px-6 py-3.5 rounded-full font-bold text-[14px] shadow-[0_8px_20px_rgba(6,111,91,0.25)] hover:bg-[#055b4b] transition-colors sm:mt-2">
             <IoAddOutline size={18} /> Add New Semester
           </button>
         </div>
 
         {/* Content Grids */}
-        <div className="grid grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 lg:gap-8">
           
           {/* Left Column (Main Tools) */}
-          <div className="col-span-8 flex flex-col gap-8">
+          <div className="xl:col-span-8 flex flex-col gap-6 lg:gap-8">
             
             {/* Semester Subjects */}
-            <div className="bg-white rounded-[24px] p-8 shadow-[0_2px_15px_rgba(0,0,0,0.02)]">
+            <div className="bg-white rounded-[20px] sm:rounded-[24px] p-5 sm:p-8 shadow-[0_2px_15px_rgba(0,0,0,0.02)]">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-[20px] font-bold text-[#1D214E]">Semester Subjects</h2>
               </div>
 
               <div className="space-y-4">
                 {subjects.map((sub) => (
-                  <div key={sub.id} className="bg-[#F8F7FB] rounded-[20px] p-4 flex items-center gap-4 border border-[#F0EEF5]">
-                    <div className="flex-1">
+                  <div key={sub.id} className="bg-[#F8F7FB] rounded-[20px] p-4 grid grid-cols-1 sm:grid-cols-[1fr_100px_140px_auto] items-end gap-4 border border-[#F0EEF5]">
+                    <div className="min-w-0">
                       <label className="block text-[#1D214E] text-[10px] font-bold tracking-widest mb-1.5 uppercase ml-2">Subject Name</label>
                       <input 
                         type="text" 
@@ -108,7 +108,7 @@ export default function GpaCalculator() {
                         className="w-full bg-white px-4 py-3.5 rounded-xl text-[#1D214E] font-semibold text-[15px] outline-none shadow-sm" 
                       />
                     </div>
-                    <div className="w-[100px]">
+                    <div>
                       <label className="block text-[#1D214E] text-[10px] font-bold tracking-widest mb-1.5 uppercase ml-2">Credits</label>
                       <input 
                         type="number" 
@@ -117,7 +117,7 @@ export default function GpaCalculator() {
                         className="w-full bg-white px-4 py-3.5 rounded-xl text-[#1D214E] font-semibold text-[15px] outline-none shadow-sm text-center" 
                       />
                     </div>
-                    <div className="w-[160px]">
+                    <div>
                       <label className="block text-[#1D214E] text-[10px] font-bold tracking-widest mb-1.5 uppercase ml-2">Points</label>
                       <input 
                         type="number" 
@@ -132,7 +132,7 @@ export default function GpaCalculator() {
                     </div>
                     <div 
                       onClick={() => deleteSubject(sub.id)}
-                      className="w-10 h-10 mt-5 rounded-xl bg-[#FFF5F6] flex items-center justify-center text-[#D64F5D] cursor-pointer hover:bg-[#ffe5e8] transition-colors shrink-0"
+                      className="w-full sm:w-10 h-10 rounded-xl bg-[#FFF5F6] flex items-center justify-center text-[#D64F5D] cursor-pointer hover:bg-[#ffe5e8] transition-colors shrink-0"
                     >
                       <IoTrash size={18} />
                     </div>
@@ -152,7 +152,7 @@ export default function GpaCalculator() {
             </div>
 
             {/* Target CGPA Planner */}
-            <div className="bg-[#F2F1FA] rounded-[24px] p-8 shadow-sm">
+            <div className="bg-[#F2F1FA] rounded-[20px] sm:rounded-[24px] p-5 sm:p-8 shadow-sm">
               <div className="flex items-center gap-3 mb-8">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[#4E58CA] shadow-sm">
                   <FiTarget size={18} />
@@ -160,7 +160,7 @@ export default function GpaCalculator() {
                 <h2 className="text-[20px] font-bold text-[#1D214E]">Target CGPA Planner</h2>
               </div>
 
-              <div className="grid grid-cols-2 gap-10">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10">
                 {/* Slider Side */}
                 <div className="flex flex-col justify-center">
                   <div className="flex justify-between items-end mb-4">
@@ -200,17 +200,17 @@ export default function GpaCalculator() {
           </div>
 
           {/* Right Column (Summaries) */}
-          <div className="col-span-4 flex flex-col gap-6">
+          <div className="xl:col-span-4 flex flex-col gap-6">
             
             {/* Estimated GPA Card */}
-            <div className="bg-[#3A45A0] rounded-[24px] p-8 text-center text-white relative overflow-hidden shadow-[0_10px_30px_rgba(58,69,160,0.2)]">
+            <div className="bg-[#3A45A0] rounded-[20px] sm:rounded-[24px] p-6 sm:p-8 text-center text-white relative overflow-hidden shadow-[0_10px_30px_rgba(58,69,160,0.2)]">
               {/* Decorative shapes */}
               <div className="absolute top-0 right-0 w-40 h-40 bg-white opacity-5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
               <div className="absolute bottom-0 left-0 w-48 h-48 bg-white opacity-5 rounded-full translate-y-1/2 -translate-x-1/2"></div>
               
               <div className="relative z-10">
                 <p className="text-[11px] font-bold tracking-[0.25em] mb-2 opacity-90 uppercase">Estimated GPA</p>
-                <h1 className="text-[85px] font-bold leading-none tracking-tighter mb-4 mt-2">{estimatedGpa}</h1>
+                <h1 className="text-[64px] sm:text-[85px] font-bold leading-none tracking-tighter mb-4 mt-2">{estimatedGpa}</h1>
                 <div className="inline-block bg-[#5A66C2] rounded-full px-5 py-2.5 mb-6 text-[13px] font-bold tracking-wide">
                   {estimatedGpa >= 4.5 ? "Distinction Level" : estimatedGpa >= 4.0 ? "Excellent Level" : estimatedGpa >= 3.5 ? "Very Good Level" : "Good Level"}
                 </div>
@@ -229,7 +229,7 @@ export default function GpaCalculator() {
             </div>
 
             {/* Performance Shift Card */}
-            <div className="bg-white rounded-[24px] p-6 shadow-[0_2px_15px_rgba(0,0,0,0.02)]">
+            <div className="bg-white rounded-[20px] sm:rounded-[24px] p-5 sm:p-6 shadow-[0_2px_15px_rgba(0,0,0,0.02)]">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-[13px] font-bold text-[#1D214E] uppercase tracking-wide w-24 leading-tight">Performance Shift</h3>
                 <span className={`font-bold text-[13px] px-3 py-1.5 rounded-full tracking-wider ${shiftIsPositive ? 'bg-[#E6F8F0] text-[#00A86B]' : 'bg-[#FFF5F6] text-[#D64F5D]'}`}>
@@ -278,7 +278,7 @@ export default function GpaCalculator() {
             </div>
 
             {/* Strategy Tip Card */}
-            <div className="bg-[#FAF3EA] rounded-[24px] p-6 relative overflow-hidden shadow-sm">
+            <div className="bg-[#FAF3EA] rounded-[20px] sm:rounded-[24px] p-5 sm:p-6 relative overflow-hidden shadow-sm">
               <div className="flex items-center gap-2.5 mb-4 relative z-10">
                 <FaLightbulb className="text-[#9A690B] text-lg" />
                 <h3 className="text-[12px] font-bold text-[#9A690B] uppercase tracking-widest">Strategy Tip</h3>

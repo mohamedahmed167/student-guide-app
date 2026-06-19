@@ -43,7 +43,7 @@ export default function Login() {
       }
     } catch (err) {
       console.error("Login error:", err);
-      setError(err.response?.message ?? "Invalid username or password");
+      setError(err.response?.message ?? "Invalid username or password from clint");
     } finally {
       setLoading(false);
     }
@@ -51,8 +51,8 @@ export default function Login() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#F8F7FB] p-4 sm:p-8 font-sans">
-      <div className="relative w-full max-w-[440px] mt-10 sm:mt-0">
-        <div className="absolute -top-6 -right-2 sm:-right-8 bg-[#2A2744] text-white rounded-[30px] py-2.5 px-5 flex items-center gap-3 shadow-[0_8px_20px_rgba(42,39,68,0.2)] z-10 w-max">
+      <div className="relative w-full max-w-[440px] mt-12 sm:mt-0">
+        <div className="absolute -top-8 right-0 sm:-top-6 sm:-right-8 bg-[#2A2744] text-white rounded-[24px] sm:rounded-[30px] py-2.5 px-4 sm:px-5 flex items-center gap-3 shadow-[0_8px_20px_rgba(42,39,68,0.2)] z-10 max-w-[calc(100vw-2rem)] sm:w-max">
           <div className="bg-[#FFB800] text-[#2A2744] rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold">
             <FaInfo />
           </div>
@@ -61,14 +61,14 @@ export default function Login() {
           </div>
         </div>
 
-        <div className="bg-white rounded-[40px] shadow-[0_20px_40px_rgba(0,0,0,0.04)] p-8 sm:p-10 relative z-0">
+        <div className="bg-white rounded-[28px] sm:rounded-[40px] shadow-[0_20px_40px_rgba(0,0,0,0.04)] p-6 sm:p-10 relative z-0">
           <div className="flex items-center justify-center gap-3 mb-8">
             <FaGraduationCap className="text-[#3B44B3] text-[32px]" />
             <span className="text-[#2A2744] text-[22px] font-bold">Student Guide</span>
           </div>
 
           <div className="text-center mb-10">
-            <h1 className="text-[32px] font-extrabold text-[#2A2744] tracking-tight">
+            <h1 className="text-[28px] sm:text-[32px] font-extrabold text-[#2A2744] tracking-tight">
               Welcome Back
             </h1>
             <p className="text-[#64617A] mt-2.5 text-[16px] font-medium leading-relaxed">
