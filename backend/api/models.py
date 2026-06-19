@@ -85,7 +85,7 @@ class Schedule(models.Model):
     
     target_level = models.IntegerField(help_text="Target academic level for this schedule (e.g., 1, 2, 3, 4).")
     department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='department_schedules', null=True, blank=True)
-    
+    doctor_name = models.CharField(max_length=255, null=True, blank=True)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, null=True, blank=True)
     type = models.CharField(max_length=50, help_text="Lecture, Lab, Section, etc.")
     hall_location = models.CharField(max_length=100)
@@ -109,9 +109,15 @@ class Exam(models.Model):
     start_time = models.TimeField(null=True, blank=True)
     end_time = models.TimeField(null=True, blank=True)
     hall_location = models.CharField(max_length=100, help_text="Exam hall or location.", null=True, blank=True)
-    
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, help_text="The Leader who added this exam.")
-
+    EXAM_TYPE_CHOICES = (
+        ('midterm', 'Midterm'),
+        ('final', 'Final'),
+        ('quiz', 'Quiz'),
+        ('practical', 'Practical'),
+    )
+    exam_type = models.CharField(max_length=50,choices=EXAM_TYPE_CHOICES, null=True, blank=True)
+    
     def __str__(self):
         return f"Level {self.target_level} | {self.subject.name} Exam"
 
