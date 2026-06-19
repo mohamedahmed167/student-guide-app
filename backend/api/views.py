@@ -12,8 +12,8 @@ from .serializers import (
     DepartmentSerializer, StudentSerializer, SubjectSerializer, 
     ScheduleSerializer, ExamSerializer, TodoSerializer,
     RegisterSerializer, StudentMeSerializer, 
-    StudentUpdateSerializer, ChangePasswordSerializer,VerifyOTPSerializer, 
-    CohortMessageSerializer ,ChangePasswordWithOTPSerializer
+    StudentUpdateSerializer, ChangePasswordSerializer, 
+    CohortMessageSerializer ,ChangePasswordWithOTPSerializer, LoginSerializer
 )
 from rest_framework import generics
 import random
@@ -130,9 +130,7 @@ class RegisterView(generics.CreateAPIView):
         )
         return response
 
-class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    password = serializers.CharField(style={'input_type': 'password'})
+
 
 class LoginWithCookieView(APIView):
     permission_classes = (AllowAny,)
@@ -199,38 +197,7 @@ class ChangePasswordView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class VerifyOTPView(GenericAPIView):
-    permission_classes = [] 
-    
-    serializer_class = VerifyOTPSerializer 
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data) 
-        
-        if serializer.is_valid():
-            email = serializer.validated_data['email']
-            otp_code = serializer.validated_data['otp_code']
-            
-            try:
-                user = User.objects.get(email=email)
-                student_profile = user.student_profile
-                
-                if student_profile.otp_code == otp_code:
-                    user.is_active = True 
-                    user.save()
-                    
-                    student_profile.otp_code = None
-                    student_profile.save()
-                    
-                    return Response({"message": "Account activated successfully!"}, status=status.HTTP_200_OK)
-                else:
-                    return Response({"error": "Invalid activation code."}, status=status.HTTP_400_BAD_REQUEST)
-                    
-            except User.DoesNotExist:
-                return Response({"error": "User with this email does not exist."}, status=status.HTTP_404_NOT_FOUND)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
 class IsLeaderToChat(permissions.BasePermission):
     message = "You do not have permission to perform this action."
@@ -323,5 +290,3 @@ class ChangePasswordWithOTPView(generics.GenericAPIView):
                 return Response({"otp_code": "Invalid or expired OTP code!"}, status=status.HTTP_400_BAD_REQUEST)
                 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-18475823

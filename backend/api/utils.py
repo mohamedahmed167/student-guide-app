@@ -9,7 +9,7 @@ def custom_exception_handler(exc, context):
         response.data = {
             "error": "Validation Failed", 
             "message": "Please check the submitted data.", 
-            "details": original_data 
+            "details": original_data
         }
 
     return response
