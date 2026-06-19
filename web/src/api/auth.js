@@ -1,4 +1,6 @@
-import { apiRequest, clearTokens, setTokens } from "./client";
+import axios from "axios";
+import { env } from "../environment/environment";
+import { apiRequest, clearTokens } from "./client";
 import { mapStudentToUser } from "./mappers";
 
 export async function register({
@@ -35,20 +37,17 @@ export async function register({
 }
 
 export async function login({ username, password }) {
-  const data = await apiRequest("/login/", {
-    method: "POST",
-    auth: false,
-    body: { username, password },
-  });
 
-  const student = data?.student || data?.user || data;
-  const user = mapStudentToUser(student, { username });
-  saveSession(user);
-  return {
-    message: data?.message,
-    user,
-    raw: data,
-  };
+  try {
+    const response  = await axios.post(`${ env.baseUrl }/login/`, { username, password })
+  
+    console.log("response: ", response.data)
+    // const user = mapStudentToUser(student, { username });
+
+    return response.data
+  } catch (err) {
+    console.log("error from login: ", err.response)
+  }
 }
 
 export async function logout() {

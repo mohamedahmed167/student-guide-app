@@ -28,33 +28,22 @@ export default function Login() {
       return;
     }
 
-    if (login.username === "admin" && login.password === "1234") {
-      navigate("/admin-dashboard");
-      return;
-    }
-
     setLoading(true);
-    setError("");
 
     try {
-      const { user } = await apiLogin({
-        username: login.username.trim(),
-        password: login.password,
-      });
+      const user  = await apiLogin({ username: login.username, password: login.password });
+
+      console.log("user: ", user)
 
       if (user) {
         loginUser(user);
-        if (user.role === "leader") {
-          navigate("/admin-dashboard");
-        } else {
-          navigate("/dashboard");
-        }
-      } else {
-        setError("Invalid username or password");
+        user.role === "leader"
+          ? navigate("/admin-dashboard")
+          : navigate("/dashboard");
       }
     } catch (err) {
       console.error("Login error:", err);
-      setError(err.message || "Invalid username or password");
+      setError(err.response?.message ?? "Invalid username or password");
     } finally {
       setLoading(false);
     }
@@ -175,23 +164,6 @@ export default function Login() {
               {loading ? "Signing in..." : "Sign In to Dashboard"} <IoArrowForward size={20} />
             </button>
           </form>
-
-          <div className="flex items-center gap-4 my-8">
-            <div className="flex-1 h-px bg-[#E5E3F0]" />
-            <span className="text-[#A09DB0] text-[12px] font-bold tracking-widest">
-              OR CONNECT WITH
-            </span>
-            <div className="flex-1 h-px bg-[#E5E3F0]" />
-          </div>
-
-          <div className="flex gap-4">
-            <button className="flex-1 py-3.5 bg-[#F3F0FA] hover:bg-[#EBE8F4] text-[#2A2744] rounded-[20px] font-bold text-[14px] flex items-center justify-center gap-2.5 transition-colors">
-              <FaGoogle className="text-[16px] text-gray-700" /> Google
-            </button>
-            <button className="flex-1 py-3.5 bg-[#F3F0FA] hover:bg-[#EBE8F4] text-[#2A2744] rounded-[20px] font-bold text-[14px] flex items-center justify-center gap-2.5 transition-colors">
-              <FaLinkedin className="text-[16px] text-[#0A66C2]" /> LinkedIn
-            </button>
-          </div>
 
           <p className="text-center text-[15px] font-medium text-[#64617A] mt-8">
             New to the guide?{" "}

@@ -88,8 +88,7 @@ function Register() {
       }
       navigate("/dashboard");
     } catch (err) {
-      console.error("Register error:", err);
-    
+      console.error("Register error:", err.response);
       // need modify from backend 
       setError(
         err.response?.data?.message ||
