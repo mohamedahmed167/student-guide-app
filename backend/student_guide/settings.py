@@ -111,11 +111,15 @@ AUTH_PASSWORD_VALIDATORS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication', 
+        # 'rest_framework.authentication.BasicAuthentication', 
+        'api.authentication.CustomCookieJWTAuthentication',
         'rest_framework.authentication.SessionAuthentication', 
         
     ],
     'EXCEPTION_HANDLER': 'api.utils.custom_exception_handler',
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
