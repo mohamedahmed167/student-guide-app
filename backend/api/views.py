@@ -145,9 +145,7 @@ class LoginWithCookieView(APIView):
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
             refresh_token = str(refresh)
-
             student_data = StudentMeSerializer(user.student_profile).data
-
             response = Response({
                 "message": "Login Successfully!",
                 "student": student_data
