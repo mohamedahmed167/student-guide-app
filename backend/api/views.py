@@ -159,15 +159,13 @@ class LoginWithCookieView(APIView):
 
 
 class LogoutView(APIView):
-    permission_classes = (AllowAny,)
-    permission_classes = [IsAuthenticated] 
+    permission_classes = [AllowAny]
     def post(self, request):
-        if hasattr(request.user, 'auth_token'):
-            request.user.auth_token.delete()
-            
-        logout(request)
-        
-        return Response({"message": "Logout Successfully!"}, status=status.HTTP_200_OK)
+        response = Response({"message": "Logout Successfully!"}, status=status.HTTP_200_OK)
+        response.delete_cookie('access_token', path='/', samesite='Lax')
+        response.delete_cookie('refresh_token', path='/', samesite='Lax')        
+        return response
+
 
 class MeView(APIView):
     permission_classes = (IsAuthenticated,)
