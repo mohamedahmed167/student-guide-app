@@ -7,7 +7,7 @@ from .views import (
     
     RegisterView, LoginWithCookieView, LogoutView, 
     MeView, ProfileUpdateView, ChangePasswordView,CohortMessageListCreateView,
-    SendPasswordOTPView, ChangePasswordWithOTPView
+    SendPasswordOTPView, ChangePasswordWithOTPView,CustomTokenRefreshView
 )
 
 
@@ -35,4 +35,5 @@ urlpatterns = [
 
     path('profile/change-password/request-otp/', SendPasswordOTPView.as_view(), name='change-password-request-otp'),
     path('profile/change-password/verify-otp/', ChangePasswordWithOTPView.as_view(), name='change-password-verify-otp'),
+    path('token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
 ]

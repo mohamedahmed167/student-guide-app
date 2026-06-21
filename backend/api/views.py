@@ -15,6 +15,8 @@ from .serializers import (
     StudentUpdateSerializer, ChangePasswordSerializer, 
     CohortMessageSerializer ,ChangePasswordWithOTPSerializer, LoginSerializer
 )
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework import generics
 import random
 from django.conf import settings
@@ -140,7 +142,7 @@ class LoginWithCookieView(APIView):
         username = request.data.get('username')
         password = request.data.get('password')
         user = authenticate(username=username, password=password)
-
+        is_secure = not settings.DEBUG
         if user is not None:
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
@@ -151,8 +153,8 @@ class LoginWithCookieView(APIView):
                 "student": student_data
             }, status=status.HTTP_200_OK)
 
-            response.set_cookie(key='access_token', value=access_token, httponly=True, samesite='Lax', max_age=3600)
-            response.set_cookie(key='refresh_token', value=refresh_token, httponly=True, samesite='Lax', max_age=86400)
+            response.set_cookie(key='access_token', value=access_token, httponly=True, samesite='None', secure=is_secure, max_age=86400)
+            response.set_cookie(key='refresh_token', value=refresh_token, httponly=True, samesite='None', secure=is_secure, max_age=604800)
             return response
         else:
             return Response({"error": "Incorrect Username or Password"}, status=status.HTTP_401_UNAUTHORIZED)
@@ -161,9 +163,10 @@ class LoginWithCookieView(APIView):
 class LogoutView(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
+        is_secure = not settings.DEBUG
         response = Response({"message": "Logout Successfully!"}, status=status.HTTP_200_OK)
-        response.delete_cookie('access_token', path='/', samesite='Lax')
-        response.delete_cookie('refresh_token', path='/', samesite='Lax')        
+        response.delete_cookie('access_token', path='/', samesite='None', secure=is_secure)
+        response.delete_cookie('refresh_token', path='/', samesite='None', secure=is_secure)     
         return response
 
 
@@ -286,3 +289,37 @@ class ChangePasswordWithOTPView(generics.GenericAPIView):
                 return Response({"otp_code": "Invalid or expired OTP code!"}, status=status.HTTP_400_BAD_REQUEST)
                 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CustomTokenRefreshView(TokenRefreshView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        refresh_token = request.COOKIES.get('refresh_token')
+        
+        if not refresh_token:
+            return Response({"error": "Refresh token is missing."}, status=status.HTTP_400_BAD_REQUEST)
+            
+        data = request.data.copy()
+        data['refresh'] = refresh_token
+        serializer = self.get_serializer(data=data)
+
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError as e:
+            raise InvalidToken(e.args[0])
+
+        access_token = serializer.validated_data.get('access')
+        
+        response = Response({"message": "Token refreshed successfully!"}, status=status.HTTP_200_OK)
+        
+        is_secure = not settings.DEBUG
+        response.set_cookie(
+            key='access_token',
+            value=access_token,
+            httponly=True,
+            samesite='None',
+            secure=is_secure,
+            max_age=86400 
+        )
+        
+        return response
