@@ -142,7 +142,6 @@ class LoginWithCookieView(APIView):
         username = request.data.get('username')
         password = request.data.get('password')
         user = authenticate(username=username, password=password)
-        is_secure = not settings.DEBUG
         if user is not None:
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
@@ -153,8 +152,8 @@ class LoginWithCookieView(APIView):
                 "student": student_data
             }, status=status.HTTP_200_OK)
 
-            response.set_cookie(key='access_token', value=access_token, httponly=True, samesite='None', secure=is_secure, max_age=86400)
-            response.set_cookie(key='refresh_token', value=refresh_token, httponly=True, samesite='None', secure=is_secure, max_age=604800)
+            response.set_cookie(key='access_token', value=access_token, httponly=True, samesite='None', secure=True, max_age=86400)
+            response.set_cookie(key='refresh_token', value=refresh_token, httponly=True, samesite='None', secure=True, max_age=604800)
             return response
         else:
             return Response({"error": "Incorrect Username or Password"}, status=status.HTTP_401_UNAUTHORIZED)
@@ -163,10 +162,9 @@ class LoginWithCookieView(APIView):
 class LogoutView(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
-        is_secure = not settings.DEBUG
         response = Response({"message": "Logout Successfully!"}, status=status.HTTP_200_OK)
-        response.delete_cookie('access_token', path='/', samesite='None', secure=is_secure)
-        response.delete_cookie('refresh_token', path='/', samesite='None', secure=is_secure)     
+        response.delete_cookie('access_token', path='/', samesite='None', secure=True)
+        response.delete_cookie('refresh_token', path='/', samesite='None', secure=True)     
         return response
 
 
@@ -312,13 +310,12 @@ class CustomTokenRefreshView(TokenRefreshView):
         
         response = Response({"message": "Token refreshed successfully!"}, status=status.HTTP_200_OK)
         
-        is_secure = not settings.DEBUG
         response.set_cookie(
             key='access_token',
             value=access_token,
             httponly=True,
             samesite='None',
-            secure=is_secure,
+            secure=True,
             max_age=86400 
         )
         
