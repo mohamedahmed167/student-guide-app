@@ -1,0 +1,41 @@
+<section class="profile-page" aria-labelledby="profile-title">
+  @if (isLoading()) {
+    <p class="state">Loading your profile…</p>
+  } @else if (error()) {
+    <p class="state error">{{ error() }} <button type="button" (click)="load()">Try again</button></p>
+  } @else if (profile(); as user) {
+    <div class="hero" [style.background-image]="user.cover_image ? 'url(' + user.cover_image + ')' : ''"></div>
+    <section class="identity">
+      <span class="avatar">{{ initials(user.full_name) }}</span>
+      <div>
+        <h1 id="profile-title">{{ user.full_name }}</h1>
+        @if (user.department?.name) { <p>{{ user.department.name }}</p> }
+        @if (user.current_level) { <p>Level {{ user.current_level }}</p> }
+      </div>
+    </section>
+    <div class="content">
+      <aside class="status">
+        @if (user.current_cgpa) {
+          <section>
+            <h2>Academic Status</h2>
+            <div class="stat"><span>Current GPA</span><strong>{{ user.current_cgpa }}</strong></div>
+            @if (user.total_credits !== undefined) { <div class="stat"><span>Credits Earned</span><strong>{{ user.total_credits }}</strong></div> }
+          </section>
+        }
+        @if (user.subjects?.length) {
+          <section><h2>Enrolled Subjects</h2><strong class="subject-count">{{ user.subjects.length }}</strong><p>Subjects returned by your academic profile.</p></section>
+        }
+      </aside>
+      <section class="details">
+        <header><div><h2>Personal Information</h2><p>Information supplied by your Student Guide profile.</p></div></header>
+        <dl>
+          @if (user.full_name) { <div><dt>Full name</dt><dd>{{ user.full_name }}</dd></div> }
+          @if (user.student_id) { <div><dt>University ID</dt><dd>{{ user.student_id }}</dd></div> }
+          @if (user.department?.name) { <div><dt>Primary department</dt><dd>{{ user.department.name }}</dd></div> }
+          @if (user.current_level) { <div><dt>Current academic year</dt><dd>Level {{ user.current_level }}</dd></div> }
+          @if (user.role) { <div><dt>Account role</dt><dd>{{ user.role }}</dd></div> }
+        </dl>
+      </section>
+    </div>
+  }
+</section>

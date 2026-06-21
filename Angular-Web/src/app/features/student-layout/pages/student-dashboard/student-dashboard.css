@@ -1,0 +1,195 @@
+:host {
+    display: block;
+    min-height: calc(100vh - 4rem);
+    background: #f9f7ff;
+    color: #303657;
+    font-family: Arial, sans-serif;
+	padding: 1rem;
+}
+.api-warning {
+    margin: 0 0 16px;
+    border: 1px solid #f5d7a8;
+    border-radius: 8px;
+    background: #fff8e9;
+    padding: 10px 12px;
+    color: #8b620d;
+    font-size: 12px;
+}
+
+.student-dashboard > header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+}
+.student-dashboard > header > time {
+    border-radius: 22px;
+    background: #fff;
+    padding: 9px 13px;
+    color: #5f6681;
+    font-size: 10px;
+    font-weight: 700;
+    box-shadow: 0 4px 14px #4b47860d;
+}
+.eyebrow {
+    margin: 0 0 8px;
+    color: #5364cf;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+}
+.student-dashboard h1 {
+    margin: 0;
+    font-size: 30px;
+    letter-spacing: -0.05em;
+}
+.student-dashboard > header p:not(.eyebrow) {
+    margin: 8px 0 24px;
+    color: #7e8299;
+    font-size: 13px;
+}
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 15px;
+    margin-bottom: 26px;
+}
+.metrics article,
+.panel {
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 9px 25px #4b478614;
+}
+.metrics article {
+    display: grid;
+    min-height: 80px;
+    padding: 19px;
+}
+.metrics span {
+    color: #767d97;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.metrics strong {
+    margin-top: 5px;
+    font-size: 25px;
+}
+.metrics strong.metric-name {
+    overflow: hidden;
+    font-size: 15px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.metrics small {
+    margin-top: 5px;
+    color: #6870bd;
+    font-size: 10px;
+}
+.content {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(220px, 0.7fr);
+    gap: 20px;
+}
+.panel {
+    overflow: hidden;
+}
+.panel header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #f0eff7;
+    padding: 17px 19px;
+}
+.panel header span {
+    color: #7d8398;
+    font-size: 10px;
+}
+.panel h2 {
+    margin: 0;
+    font-size: 15px;
+}
+.schedule article {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 1px solid #f2f1f7;
+    padding: 15px 19px;
+}
+.schedule article:last-child {
+    border: 0;
+}
+.schedule time {
+    border-radius: 8px;
+    background: #eef0ff;
+    padding: 8px;
+    color: #4d5fcb;
+    font-size: 11px;
+    font-weight: 700;
+}
+.schedule h3 {
+    margin: 0;
+    font-size: 13px;
+}
+.schedule p {
+    margin: 5px 0 0;
+    color: #7a8095;
+    font-size: 10px;
+}
+.tasks article {
+    display: flex;
+    gap: 9px;
+    border-bottom: 1px solid #f2f1f7;
+    padding: 14px 18px;
+    color: #555c75;
+    font-size: 12px;
+}
+.tasks article:last-child {
+    border: 0;
+}
+.tasks .done {
+    color: #9aa0b1;
+    text-decoration: line-through;
+}
+.tasks span {
+    color: #5364ca;
+    font-weight: bold;
+}
+.state {
+    margin: 100px auto;
+    color: #777e92;
+    text-align: center;
+}
+.error {
+    color: #b43644;
+}
+.error button {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+}
+@media (max-width: 900px) {
+    .metrics {
+        grid-template-columns: 1fr 1fr;
+    }
+    .content {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 640px) {
+    .student-dashboard {
+        padding: 76px 16px 24px;
+    }
+    .student-dashboard > header {
+        flex-direction: column;
+    }
+    .metrics {
+        grid-template-columns: 1fr;
+    }
+    .student-dashboard h1 {
+        font-size: 25px;
+    }
+}

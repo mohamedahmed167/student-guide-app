@@ -38,12 +38,10 @@ export class Login {
 			.login({ username, password })
 			.pipe(finalize(() => this.isSubmitting.set(false)))
 			.subscribe({
-				next: (res) => {
-					console.log(res);
-					this.router.navigateByUrl('/dashboard')
+        next: (res) => {
+                    this.router.navigateByUrl(res?.student?.role === 'student' ? '/student/dashboard' : '/dashboard');
 				},
 				error: (error: { error?: { message?: string; detail?: string } }) => {
-					console.log(error);
 					this.errorMessage.set(
 						error.error?.message ?? error.error?.detail ?? 'Unable to sign in. Check your username and password.',
 					);
