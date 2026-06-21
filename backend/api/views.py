@@ -27,6 +27,7 @@ from django.contrib.auth import logout
 
 class DepartmentViewSet(viewsets.ModelViewSet):
     queryset = Department.objects.all()
+    permission_classes = [AllowAny]
     serializer_class = DepartmentSerializer
 
 class StudentViewSet(viewsets.ModelViewSet):
@@ -35,6 +36,7 @@ class StudentViewSet(viewsets.ModelViewSet):
 
 class SubjectViewSet(viewsets.ModelViewSet):
     queryset = Subject.objects.all()
+    permission_classes = [AllowAny]
     serializer_class = SubjectSerializer
 
 class ScheduleViewSet(viewsets.ModelViewSet):
