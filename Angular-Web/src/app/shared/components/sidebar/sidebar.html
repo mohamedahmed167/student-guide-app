@@ -1,0 +1,153 @@
+<button
+    type="button"
+    class="fixed left-4 top-4 z-50 inline-flex size-11 items-center justify-center rounded-xl bg-slate-950 text-white shadow-lg shadow-slate-950/25 transition hover:bg-slate-800 md:hidden"
+    [attr.aria-expanded]="isOpen()"
+    aria-controls="main-sidebar"
+    aria-label="Toggle navigation"
+    (click)="toggle()"
+>
+    <svg
+        class="size-5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        aria-hidden="true"
+    >
+        <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+    </svg>
+</button>
+
+@if (isOpen()) {
+    <button
+        type="button"
+        class="fixed inset-0 z-30 bg-slate-950/55 md:hidden"
+        aria-label="Close navigation"
+        (click)="close()"
+    ></button>
+}
+
+<aside
+    id="main-sidebar"
+    class="fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full flex-col border-r border-slate-800 bg-[#181d33] px-3 py-7 text-slate-300 shadow-2xl shadow-slate-950/25 transition-transform duration-300 md:translate-x-0"
+    [class.translate-x-0]="isOpen()"
+    [class.-translate-x-full]="!isOpen()"
+>
+    <a routerLink="/dashboard" class="mb-8 block px-3" (click)="close()">
+        <span class="block text-xl font-bold leading-tight tracking-tight text-white"
+            >Student Guide</span
+        >
+        <span class="mt-1 block text-[9px] font-semibold tracking-[0.18em] text-slate-400"
+            >ADMIN PANEL</span
+        >
+    </a>
+
+    <nav class="space-y-1" aria-label="Main navigation">
+        @for (item of navigation; track item.path) {
+            <a
+                [routerLink]="item.path"
+                routerLinkActive="bg-indigo-600 text-white shadow-sm"
+                class="group flex h-10 items-center gap-3 rounded-md px-3 text-xs font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white"
+                (click)="close()"
+            >
+                @switch (item.icon) {
+                    @case ('dashboard') {
+                        <svg
+                            class="size-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            aria-hidden="true"
+                        >
+                            <rect x="4" y="4" width="6" height="6" rx="1" />
+                            <rect x="14" y="4" width="6" height="6" rx="1" />
+                            <rect x="4" y="14" width="6" height="6" rx="1" />
+                            <rect x="14" y="14" width="6" height="6" rx="1" />
+                        </svg>
+                    }
+                    @case ('calendar') {
+                        <svg
+                            class="size-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            aria-hidden="true"
+                        >
+                            <rect x="4" y="5" width="16" height="15" rx="2" />
+                            <path d="M8 3v4m8-4v4M4 10h16" stroke-linecap="round" />
+                        </svg>
+                    }
+                    @case ('announcement') {
+                        <svg
+                            class="size-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            aria-hidden="true"
+                        >
+                            <path d="m5 11 12-5v12L5 13v-2Z" stroke-linejoin="round" />
+                            <path d="M8 14v4m3-3v4M5 11H3m2 2H3" stroke-linecap="round" />
+                        </svg>
+                    }
+                    @case ('students') {
+                        <svg
+                            class="size-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            aria-hidden="true"
+                        >
+                            <circle cx="9" cy="8" r="3" />
+                            <path
+                                d="M3.5 20c.8-3.3 2.7-5 5.5-5s4.7 1.7 5.5 5M16 7a3 3 0 0 1 0 6m1.5 2c1.6.6 2.7 2.2 3 5"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+                    }
+                    @default {
+                        <svg
+                            class="size-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            aria-hidden="true"
+                        >
+                            <circle cx="12" cy="12" r="3" />
+                            <path
+                                d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.1 2.1-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5v.2h-3v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1-2.1-2.1.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H5.3v-3h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1 2.1-2.1.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5v-.2h3v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1 2.1 2.1-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5 1h.2v3h-.2a1.7 1.7 0 0 0-1.5 1Z"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                    }
+                }
+                <span>{{ item.label }}</span>
+            </a>
+        }
+    </nav>
+
+    <div class="mt-auto border-t border-slate-700/60 px-2 pt-5">
+        <button
+            type="button"
+            class="flex w-full items-center gap-3 rounded-md py-1.5 text-left transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70"
+            [disabled]="isLoggingOut()"
+            (click)="logout()"
+        >
+            <span
+                class="grid size-6 place-items-center rounded-full bg-cyan-500 text-[10px] font-bold text-white"
+                >A</span
+            >
+            <span class="text-xs font-semibold text-white">{{ isLoggingOut() ? 'Logging out...' : 'Logout' }}</span>
+            <svg class="ml-auto size-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M10 17l5-5-5-5M15 12H3M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </button>
+        @if (logoutError()) {
+            <p class="mt-2 text-xs font-medium text-rose-300" role="alert">{{ logoutError() }}</p>
+        }
+    </div>
+</aside>

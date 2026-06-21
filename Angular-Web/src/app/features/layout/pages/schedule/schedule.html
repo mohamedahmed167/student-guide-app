@@ -1,0 +1,41 @@
+<section class="schedule-page" aria-labelledby="schedule-title">
+  <header class="schedule-page__header">
+    <div><p class="eyebrow">ACADEMIC PLANNER</p><h1 id="schedule-title">Schedule Manager</h1><p class="subtitle">Organize your cohort's weekly classes in one place.</p></div>
+    <button type="button" class="primary-button" (click)="toggleForm()">{{ showForm() ? 'Close form' : '+ Add schedule' }}</button>
+  </header>
+
+  @if (success()) { <p class="notice notice--success" role="status">{{ success() }}</p> }
+  @if (error() && !showForm()) { <div class="notice notice--error"><span>{{ error() }}</span><button type="button" (click)="loadData()">Try again</button></div> }
+
+  @if (showForm()) {
+    <form class="schedule-form" (ngSubmit)="createSchedule()">
+      <div class="form-heading"><div><h2>Add a class</h2><p>It will be visible to your current cohort.</p></div><span>Level {{ profile.current_level || 1 }}</span></div>
+      @if (!subjects().length) { <p class="notice notice--error">No enrolled subjects were found. Add a subject to your profile before creating a schedule entry.</p> }
+      <div class="form-grid">
+        <label>Subject<select name="subject" [(ngModel)]="form.subject" required><option value="" disabled>Select a subject</option>@for (subject of subjects(); track subject.subject_id) { <option [value]="subject.subject_id">{{ subject.subject_code }} — {{ subject.name }}</option> }</select></label>
+        <label>Class type<select name="type" [(ngModel)]="form.type" required><option>Lecture</option><option>Lab</option><option>Section</option><option>Workshop</option></select></label>
+        <label>Instructor <input name="doctor_name" [(ngModel)]="form.doctor_name" placeholder="Dr. name (optional)" /></label>
+        <label>Room / location <input name="hall_location" [(ngModel)]="form.hall_location" placeholder="e.g. Hall B12" required /></label>
+        <label>Day<select name="day" [(ngModel)]="form.day_of_week" required>@for (day of days; track day.key) { <option [value]="day.key">{{ day.label }}</option> }</select></label>
+        <label>Starts <input name="start_time" type="time" [(ngModel)]="form.start_time" required /></label>
+        <label>Ends <input name="end_time" type="time" [(ngModel)]="form.end_time" required /></label>
+      </div>
+      @if (error()) { <p class="form-error" role="alert">{{ error() }}</p> }
+      <div class="form-actions"><button type="button" class="secondary-button" (click)="toggleForm()">Cancel</button><button type="submit" class="primary-button" [disabled]="isSubmitting() || !subjects().length">{{ isSubmitting() ? 'Adding…' : 'Add to schedule' }}</button></div>
+    </form>
+  }
+
+  @if (isLoading()) { <p class="state-message">Loading weekly schedule…</p> }
+  @else if (!schedules().length && !error()) { <div class="empty-state"><h2>Your week is clear</h2><p>Start building a class timetable for your cohort.</p><button type="button" class="primary-button" (click)="toggleForm()">Add first class</button></div> }
+  @else {
+    <div class="week-grid">
+      @for (day of days; track day.key) {
+        <section class="day-column"><h2>{{ day.label }}</h2><p>{{ scheduleFor(day.key).length }} class{{ scheduleFor(day.key).length === 1 ? '' : 'es' }}</p>
+          <div class="day-column__classes">@for (schedule of scheduleFor(day.key); track schedule.schedule_id) {
+            <article class="class-card"><div class="class-card__time"><strong>{{ formatTime(schedule.start_time) }}</strong><span>{{ formatTime(schedule.end_time) }}</span></div><div class="class-card__details"><span class="class-type">{{ schedule.type }}</span><h3>{{ schedule.subject.name || 'Subject' }}</h3><p>{{ schedule.subject.subject_code }} · {{ schedule.hall_location }}</p>@if (schedule.doctor_name) { <small>{{ schedule.doctor_name }}</small> }</div></article>
+          } @empty { <p class="no-class">No classes</p> }</div>
+        </section>
+      }
+    </div>
+  }
+</section>

@@ -1,0 +1,33 @@
+<section class="settings-page" aria-labelledby="settings-title">
+	<header>
+		<p>ACCOUNT</p>
+		<h1 id="settings-title">Global Settings</h1><span>Profile data from your active Student Guide account.</span>
+	</header>@if (isLoading()) { <p class="state">Loading settings…</p> } @else if (error()) { <p class="state error">{{
+		error() }} <button type="button" (click)="load()">Try again</button></p> } @else if (profile(); as user) { <div
+		class="settings-card">
+		<div class="identity"><span>{{ user.full_name?.slice(0,1)?.toUpperCase() || 'S' }}</span>
+			<div>
+				<h2>{{ user.full_name }}</h2>
+				<p>{{ user.student_id }}</p>
+			</div>
+		</div>
+		<dl>
+			<div>
+				<dt>Department</dt>
+				<dd>{{ user.department?.name || user.department }}</dd>
+			</div>
+			<div>
+				<dt>Current level</dt>
+				<dd>Level {{ user.current_level }}</dd>
+			</div>
+			<div>
+				<dt>Role</dt>
+				<dd>{{ user.role }}</dd>
+			</div>
+			<div>
+				<dt>Enrolled subjects</dt>
+				<dd>{{ user.subjects?.length || 0 }}</dd>
+			</div>
+		</dl>
+	</div> }
+</section>
