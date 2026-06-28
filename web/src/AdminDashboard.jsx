@@ -58,9 +58,9 @@ export default function AdminDashboard() {
         targetLevel: 1,
       });
       addSchedule(created);
-      alert("Event added successfully! It will now appear on the student dashboard.");
       setFormData({ title: '', type: 'Lecture', date: '', time: '', room: '' });
     } catch (err) {
+      console.log(err)
       addSchedule({
         title: formData.title,
         type: formData.type,
@@ -68,7 +68,6 @@ export default function AdminDashboard() {
         time: formData.time,
         room: formData.room
       });
-      alert(err.message || "Saved locally. API requires leader authentication.");
       setFormData({ title: '', type: 'Lecture', date: '', time: '', room: '' });
     }
   };
@@ -82,7 +81,6 @@ export default function AdminDashboard() {
     try {
       const created = await createChat(content);
       addAnnouncement(created);
-      alert("Announcement published successfully!");
     } catch (err) {
       addAnnouncement({
         title: annTitle.trim(),
@@ -90,7 +88,7 @@ export default function AdminDashboard() {
         priority: annPriority,
         status: "Sent"
       });
-      alert(err.message || "Saved locally. API requires authentication.");
+      console.log(err)
     }
 
     setAnnTitle('');
@@ -127,11 +125,18 @@ export default function AdminDashboard() {
     { name: 'Settings', icon: <IoSettingsOutline size={20} /> },
   ];
 
+  const sentAnnouncements = announcements.filter(
+    (ann) => (ann.status || 'Sent') === 'Sent'
+  ).length;
+  const pendingItems = announcements.filter(
+    (ann) => ann.status === 'Draft'
+  ).length;
+
   return (
     <div className="flex min-h-screen bg-[#F5F6FA] font-sans text-left" dir="ltr">
       
       {/* Sidebar */}
-      <aside className="w-[260px] bg-[#181B34] flex flex-col justify-between fixed h-screen z-20">
+      <aside className="hidden lg:flex w-[260px] bg-[#181B34] flex-col justify-between fixed h-screen z-20">
         <div>
           {/* Logo */}
           <div className="p-8">
@@ -179,12 +184,28 @@ export default function AdminDashboard() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 ml-[260px] flex flex-col min-h-screen">
+      <main className="flex-1 lg:ml-[260px] flex flex-col min-h-screen min-w-0">
         
         {/* Top Header */}
-        <header className="h-[80px] bg-white px-8 flex items-center justify-end sticky top-0 z-10 border-b border-[#EBEBF2]">
+        <header className="bg-white px-4 sm:px-6 lg:px-8 py-4 flex flex-col gap-4 lg:h-[80px] lg:flex-row lg:items-center lg:justify-end sticky top-0 z-10 border-b border-[#EBEBF2]">
+          <nav className="lg:hidden flex gap-2 overflow-x-auto pb-1">
+            {menuItems.map((item) => (
+              <button
+                key={item.name}
+                onClick={() => setActiveMenu(item.name)}
+                className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-[12px] text-[13px] font-semibold transition-all ${
+                  activeMenu === item.name
+                    ? "bg-[#3B44B3] text-white shadow-[0_4px_15px_rgba(59,68,179,0.25)]"
+                    : "bg-[#F5F6FA] text-[#4B5563]"
+                }`}
+              >
+                {item.icon}
+                {item.name}
+              </button>
+            ))}
+          </nav>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center justify-end gap-6">
             <div className="flex items-center gap-3 cursor-pointer">
               <img src="https://ui-avatars.com/api/?name=Admin+Console&background=EBF4FF&color=3B44B3&bold=true" alt="Admin" className="w-9 h-9 rounded-full" />
               <span className="text-[#1D214E] font-bold text-[14px]">Admin Console</span>
@@ -193,12 +214,12 @@ export default function AdminDashboard() {
         </header>
 
         {/* Dashboard Content */}
-        <div className="p-8 flex-1">
+        <div className="p-4 sm:p-6 lg:p-8 flex-1">
           
           {activeMenu === 'Dashboard' && (
             <>
               {/* Stat Cards */}
-              <div className="grid grid-cols-4 gap-6 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6 mb-8">
                 <StatCard 
                   icon={<IoPeopleOutline size={24} />} 
                   iconBg="bg-[#3B44B3]" 
@@ -207,43 +228,52 @@ export default function AdminDashboard() {
                   value={loading ? "..." : students.length} 
                   badge="+4%" 
                   badgeColor="text-[#059669] bg-[#DEF7EC]"
+                  onClick={() => setActiveMenu('Students')}
                 />
                 <StatCard 
                   icon={<IoCalendarOutline size={24} />} 
                   iconBg="bg-[#06B6D4]" 
                   iconColor="text-white"
                   title="Active Schedules" 
-                  value="148" 
+                  value={schedules.length} 
                   badge="Live" 
                   badgeColor="text-[#6B7280] bg-[#F3F4F6]"
+                  onClick={() => setActiveMenu('Schedule Manager')}
                 />
                 <StatCard 
                   icon={<IoMegaphoneOutline size={24} />} 
                   iconBg="bg-[#F59E0B]" 
                   iconColor="text-white"
                   title="Announcements Sent" 
-                  value="52" 
+                  value={sentAnnouncements} 
                   badge="Weekly" 
                   badgeColor="text-[#6B7280] bg-[#F3F4F6]"
+                  onClick={() => setActiveMenu('Announcements')}
                 />
                 <StatCard 
                   icon={<IoClipboardOutline size={24} />} 
                   iconBg="bg-[#F05252]" 
                   iconColor="text-white"
                   title="Pending Items" 
-                  value="14" 
+                  value={pendingItems} 
                   badge="Action Required" 
                   badgeColor="text-[#9B1C1C] bg-[#FDE8E8]"
+                  onClick={() => setActiveMenu('Announcements')}
                 />
               </div>
 
-              <div className="grid grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
                 
                 {/* Left Column - Recent Announcements */}
-                <div className="col-span-2 bg-white rounded-[20px] p-7 shadow-[0_2px_15px_rgba(0,0,0,0.02)]">
-                  <div className="flex justify-between items-center mb-6">
+                <div className="xl:col-span-2 bg-white rounded-[20px] p-5 sm:p-7 shadow-[0_2px_15px_rgba(0,0,0,0.02)]">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center mb-6">
                     <h2 className="text-[20px] font-bold text-[#1D214E]">Recent Announcements</h2>
-                    <button className="text-[#3B44B3] text-[13px] font-bold hover:underline">View All</button>
+                    <button
+                      onClick={() => setActiveMenu('Announcements')}
+                      className="text-[#3B44B3] text-[13px] font-bold hover:underline"
+                    >
+                      View All
+                    </button>
                   </div>
 
                   <div className="space-y-0 divide-y divide-[#F3F4F6]">
@@ -271,10 +301,10 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Right Column */}
-                <div className="col-span-1 space-y-6">
+                <div className="space-y-6">
                   
                   {/* Quick Actions */}
-                  <div className="bg-white rounded-[20px] p-7 shadow-[0_2px_15px_rgba(0,0,0,0.02)]">
+                  <div className="bg-white rounded-[20px] p-5 sm:p-7 shadow-[0_2px_15px_rgba(0,0,0,0.02)]">
                     <h2 className="text-[20px] font-bold text-[#1D214E] mb-5">Quick Actions</h2>
                     <div className="space-y-3">
                       <button onClick={() => setActiveMenu('Schedule Manager')} className="w-full bg-gradient-to-r from-[#3B44B3] to-[#06B6D4] text-white p-4 rounded-[12px] flex items-center justify-between shadow-[0_4px_15px_rgba(59,68,179,0.3)] hover:opacity-90 transition-opacity">
@@ -299,7 +329,7 @@ export default function AdminDashboard() {
                   </div>
 
                   {/* Featured Activity */}
-                  <div className="bg-gradient-to-br from-[#2D3380] to-[#181B34] rounded-[20px] p-7 shadow-[0_10px_30px_rgba(45,51,128,0.3)] relative overflow-hidden text-white">
+                  <div className="bg-gradient-to-br from-[#2D3380] to-[#181B34] rounded-[20px] p-5 sm:p-7 shadow-[0_10px_30px_rgba(45,51,128,0.3)] relative overflow-hidden text-white">
                     <p className="text-[11px] font-bold tracking-widest text-white/70 uppercase mb-3">FEATURED ACTIVITY</p>
                     <h3 className="text-[24px] font-bold leading-tight mb-4">Faculty Orientation<br/>Workshop</h3>
                     <div className="flex items-center gap-2 text-white/80 text-[13px] font-medium mb-6">
@@ -318,7 +348,7 @@ export default function AdminDashboard() {
           )}
 
           {activeMenu === 'Students' && (
-            <div className="bg-white rounded-[20px] p-7 shadow-[0_2px_15px_rgba(0,0,0,0.02)]">
+            <div className="bg-white rounded-[20px] p-5 sm:p-7 shadow-[0_2px_15px_rgba(0,0,0,0.02)]">
               <h2 className="text-[20px] font-bold text-[#1D214E] mb-6">All Students</h2>
               {loading ? (
                 <div className="flex justify-center items-center py-20">
@@ -326,7 +356,7 @@ export default function AdminDashboard() {
                 </div>
               ) : students.length > 0 ? (
                 <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse">
+                  <table className="min-w-[760px] w-full text-left border-collapse">
                     <thead>
                       <tr className="border-b border-[#EBEBF2] text-[#8E95C0] text-[13px]">
                         <th className="py-4 px-2 font-semibold">ID</th>
@@ -356,10 +386,10 @@ export default function AdminDashboard() {
           )}
 
           {activeMenu === 'Schedule Manager' && (
-            <div className="bg-white rounded-[20px] p-8 shadow-[0_2px_15px_rgba(0,0,0,0.02)]">
+            <div className="bg-white rounded-[20px] p-5 sm:p-8 shadow-[0_2px_15px_rgba(0,0,0,0.02)]">
               <h2 className="text-[22px] font-bold text-[#1D214E] mb-8 border-b border-[#EBEBF2] pb-4">Schedule Manager</h2>
               
-              <div className="grid grid-cols-2 gap-10">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-10">
                 <div>
                   <h3 className="text-[16px] font-bold text-[#1D214E] mb-5">Add New Event (Lecture / Exam)</h3>
                   <form className="space-y-5" onSubmit={handleSubmit}>
@@ -375,7 +405,7 @@ export default function AdminDashboard() {
                         required 
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-[13px] font-bold text-[#6B7280] mb-2">Event Type</label>
                         <select 
@@ -401,7 +431,7 @@ export default function AdminDashboard() {
                         />
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-[13px] font-bold text-[#6B7280] mb-2">Time</label>
                         <input 
@@ -436,8 +466,8 @@ export default function AdminDashboard() {
                   <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
                     {schedules.length > 0 ? (
                       schedules.map(item => (
-                        <div key={item.id} className="bg-[#F9FAFB] border border-[#EBEBF2] rounded-[12px] p-4 flex justify-between items-center group hover:border-[#3B44B3] transition-all">
-                          <div>
+                        <div key={item.id} className="bg-[#F9FAFB] border border-[#EBEBF2] rounded-[12px] p-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 group hover:border-[#3B44B3] transition-all">
+                          <div className="min-w-0">
                             <h4 className="text-[14px] font-bold text-[#1D214E]">{item.title}</h4>
                             <p className="text-[12px] text-[#6B7280]">{item.date} • {item.time} • {item.room}</p>
                             <span className="text-[10px] font-bold uppercase tracking-wider text-[#3B44B3] mt-1 inline-block">{item.type}</span>
@@ -461,7 +491,7 @@ export default function AdminDashboard() {
           )}
 
           {activeMenu === 'Announcements' && (
-            <div className="bg-white rounded-[20px] p-8 shadow-[0_2px_15px_rgba(0,0,0,0.02)]">
+            <div className="bg-white rounded-[20px] p-5 sm:p-8 shadow-[0_2px_15px_rgba(0,0,0,0.02)]">
               <h2 className="text-[22px] font-bold text-[#1D214E] mb-8 border-b border-[#EBEBF2] pb-4">Create Announcement</h2>
               
               <div className="max-w-2xl">
@@ -478,7 +508,7 @@ export default function AdminDashboard() {
                     />
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[13px] font-bold text-[#6B7280] mb-2">Priority Level</label>
                       <select 
@@ -507,7 +537,7 @@ export default function AdminDashboard() {
 
                   <div>
                     <label className="block text-[13px] font-bold text-[#6B7280] mb-2">Attach Image (Optional)</label>
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
                       <label className="flex items-center justify-center gap-2 bg-[#EEF0FF] text-[#3B44B3] px-5 py-3 rounded-[12px] font-bold text-[14px] cursor-pointer hover:bg-[#E0E5FF] transition-colors border border-[#D1D9FF]">
                         <IoAdd size={20} />
                         Choose Image
@@ -517,8 +547,8 @@ export default function AdminDashboard() {
                     </div>
                   </div>
 
-                  <div className="flex gap-4 pt-4">
-                    <button type="submit" className="bg-[#3B44B3] text-white px-8 py-3 rounded-[12px] font-bold text-[14px] shadow-[0_4px_15px_rgba(59,68,179,0.3)] hover:bg-[#2D3380] transition-colors flex items-center gap-2">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
+                    <button type="submit" className="bg-[#3B44B3] text-white px-8 py-3 rounded-[12px] font-bold text-[14px] shadow-[0_4px_15px_rgba(59,68,179,0.3)] hover:bg-[#2D3380] transition-colors flex items-center justify-center gap-2">
                       <IoPaperPlaneOutline size={18} /> Publish Now
                     </button>
                     <button type="button" className="bg-[#F3F4F6] text-[#4B5563] px-8 py-3 rounded-[12px] font-bold text-[14px] hover:bg-[#E5E7EB] transition-colors">
@@ -543,8 +573,16 @@ export default function AdminDashboard() {
   );
 }
 
-const StatCard = ({ icon, iconBg, iconColor, title, value, badge, badgeColor }) => (
-  <div className="bg-white rounded-[20px] p-6 shadow-[0_2px_15px_rgba(0,0,0,0.02)] relative overflow-hidden">
+const StatCard = ({ icon, iconBg, iconColor, title, value, badge, badgeColor, onClick }) => (
+  <div
+    role={onClick ? 'button' : undefined}
+    tabIndex={onClick ? 0 : undefined}
+    onClick={onClick}
+    onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } } : undefined}
+    className={`bg-white rounded-[20px] p-5 sm:p-6 shadow-[0_2px_15px_rgba(0,0,0,0.02)] relative overflow-hidden ${
+      onClick ? 'cursor-pointer hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 transition-all' : ''
+    }`}
+  >
     <div className="flex justify-between items-start mb-4">
       <div className={`w-12 h-12 rounded-full ${iconBg} ${iconColor} flex items-center justify-center shadow-sm`}>
         {icon}
@@ -559,7 +597,7 @@ const StatCard = ({ icon, iconBg, iconColor, title, value, badge, badgeColor }) 
 );
 
 const AnnouncementItem = ({ icon, title, desc, date, status, statusColor }) => (
-  <div className="py-5 flex items-start gap-4 hover:bg-[#F9FAFB] transition-colors -mx-7 px-7">
+  <div className="py-5 flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4 hover:bg-[#F9FAFB] transition-colors -mx-5 sm:-mx-7 px-5 sm:px-7">
     <div className="w-10 h-10 rounded-[10px] bg-[#F3F4F6] flex items-center justify-center text-[#4B5563] shrink-0 mt-1">
       {icon}
     </div>
@@ -568,7 +606,7 @@ const AnnouncementItem = ({ icon, title, desc, date, status, statusColor }) => (
       <p className="text-[#6B7280] text-[13px] leading-relaxed truncate mb-2">{desc}</p>
       <p className="text-[#9CA3AF] text-[12px] font-medium">{date}</p>
     </div>
-    <div className="shrink-0 ml-2">
+    <div className="shrink-0 sm:ml-2">
       <span className={`px-3 py-1 rounded-full text-[11px] font-bold ${statusColor}`}>
         {status}
       </span>

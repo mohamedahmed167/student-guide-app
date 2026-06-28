@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { userContext } from './context/context';
 import { getTodos, createTodo, updateTodo, deleteTodo } from './api';
 import SideBar from './compontents/SideBar';
@@ -17,21 +16,13 @@ import {
   IoListOutline,
   IoPencil,
   IoCheckmark,
-  IoTrash,
-  IoLogOutOutline
+  IoTrash
 } from "react-icons/io5";
 
 function Dashboard() {
-  const { userData, schedules, logoutUser } = useContext(userContext);
-  const navigate = useNavigate();
+  const { userData, schedules } = useContext(userContext);
   const firstName = userData?.name ? userData.name.split(' ')[0] : "Alex";
   const currentGpa = userData?.gpa || "3.62";
-  const subjectsCount = userData?.subjects?.length || 6;
-
-  const handleLogout = () => {
-    logoutUser();
-    navigate("/login");
-  };
 
   const [tasks, setTasks] = useState([
     { id: 1, label: "Finish Lab Report", checked: false },
@@ -131,15 +122,15 @@ function Dashboard() {
   return (
     <div className="flex min-h-screen bg-[#F5F5FA] font-sans text-left" dir="ltr">
       <SideBar />
-      <div className="flex-1 p-10 overflow-y-auto">
+      <div className="flex-1 w-full min-w-0 p-4 sm:p-6 lg:p-10 overflow-y-auto">
 
         {/* Header */}
-        <div className="flex justify-between items-start mb-8">
-          <div>
-            <h1 className="text-[34px] font-bold text-[#1D214E] tracking-tight">
+        <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start mb-8">
+          <div className="min-w-0">
+            <h1 className="text-[26px] sm:text-[34px] font-bold text-[#1D214E] tracking-tight leading-tight">
               Welcome back, <span className="text-[#4E58CA]">{firstName}</span>
             </h1>
-            <p className="text-[#7F8A9E] text-[16px] mt-1 font-medium">
+            <p className="text-[#7F8A9E] text-[14px] sm:text-[16px] mt-1 font-medium">
               {todaysSchedules.length > 0
                 ? `You have ${todaysSchedules.length} classes today. Stay focused!`
                 : upcomingSchedules.length > 0
@@ -147,15 +138,15 @@ function Dashboard() {
                   : "No classes scheduled. Enjoy your free time!"}
             </p>
           </div>
-          <div className="flex items-center gap-4 mt-2 pr-2">
+          <div className="flex items-center gap-4 sm:mt-2 sm:pr-2">
             <NotificationBell size={24} />
 
           </div>
         </div>
 
         {/* Stat Cards */}
-        <div className="grid grid-cols-4 gap-6 mb-10">
-          <div className="bg-white rounded-[24px] p-6 shadow-[0_2px_15px_rgba(0,0,0,0.02)] relative overflow-hidden flex flex-col justify-between">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6 mb-8 lg:mb-10">
+          <div className="bg-white rounded-[20px] sm:rounded-[24px] p-5 sm:p-6 shadow-[0_2px_15px_rgba(0,0,0,0.02)] relative overflow-hidden flex flex-col justify-between">
             <div className="w-1.5 h-12 bg-[#4E58CA] absolute left-0 top-6 rounded-r-full"></div>
             <p className="text-[#7F8A9E] text-[12px] font-bold tracking-widest mb-2 pl-2">CURRENT GPA</p>
             <h2 className="text-[36px] font-bold text-[#1D214E] mb-2 leading-none pl-2">{currentGpa}</h2>
@@ -164,7 +155,7 @@ function Dashboard() {
             </div>
           </div>
 
-          <div className="bg-white rounded-[24px] p-6 shadow-[0_2px_15px_rgba(0,0,0,0.02)] flex flex-col justify-between">
+          <div className="bg-white rounded-[20px] sm:rounded-[24px] p-5 sm:p-6 shadow-[0_2px_15px_rgba(0,0,0,0.02)] flex flex-col justify-between">
             <p className="text-[#7F8A9E] text-[12px] font-bold tracking-widest mb-2">SUBJECTS</p>
             <h2 className="text-[36px] font-bold text-[#1D214E] mb-3 leading-none">{userData?.subjects?.length || 0}</h2>
             {userData?.subjects?.length > 0 ? (
@@ -188,13 +179,13 @@ function Dashboard() {
             )}
           </div>
 
-          <div className="bg-white rounded-[24px] p-6 shadow-[0_2px_15px_rgba(0,0,0,0.02)] flex flex-col justify-between">
+          <div className="bg-white rounded-[20px] sm:rounded-[24px] p-5 sm:p-6 shadow-[0_2px_15px_rgba(0,0,0,0.02)] flex flex-col justify-between">
             <p className="text-[#7F8A9E] text-[12px] font-bold tracking-widest mb-2">NEXT LECTURE</p>
             <h2 className="text-[20px] font-bold text-[#1D214E] mb-2 leading-tight mt-1">{nextLecture ? nextLecture.title : "No more classes"}</h2>
             <p className="text-[#4E58CA] text-[14px] font-bold mt-auto">{nextLecture ? formatTime12h(nextLecture.time) : "--:--"}</p>
           </div>
 
-          <div className="bg-white rounded-[24px] p-6 shadow-[0_2px_15px_rgba(0,0,0,0.02)] flex flex-col justify-between">
+          <div className="bg-white rounded-[20px] sm:rounded-[24px] p-5 sm:p-6 shadow-[0_2px_15px_rgba(0,0,0,0.02)] flex flex-col justify-between">
             <p className="text-[#7F8A9E] text-[12px] font-bold tracking-widest mb-2">UPCOMING EXAMS</p>
             <h2 className="text-[36px] font-bold text-[#D64F5D] mb-3 leading-none">2</h2>
             <div className="flex items-center gap-1.5 text-[#7F8A9E] text-[13px] font-bold mt-auto">
@@ -204,11 +195,11 @@ function Dashboard() {
         </div>
 
         {/* Main Area */}
-        <div className="grid grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
 
           {/* Left Col */}
-          <div className="col-span-2">
-            <div className="flex justify-between items-center mb-6">
+          <div className="xl:col-span-2">
+            <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center mb-6">
               <div className="flex flex-col">
                 <h2 className="text-[22px] font-bold text-[#1D214E]">
                   {showAll ? "All Schedules" : todaysSchedules.length > 0 ? "Today's Schedule" : "Upcoming Schedule"}
@@ -222,21 +213,21 @@ function Dashboard() {
                   </button>
                 )}
               </div>
-              <button className="text-[#4E58CA] text-[12px] font-bold tracking-widest hover:underline uppercase">VIEW FULL CALENDAR</button>
+              <button className="text-left sm:text-right text-[#4E58CA] text-[12px] font-bold tracking-widest hover:underline uppercase">VIEW FULL CALENDAR</button>
             </div>
 
             <div className="space-y-4 mb-8">
               {displaySchedules.length > 0 ? (
                 displaySchedules.map((item, index) => (
-                  <div key={item.id} className={`${item.bgColor || "bg-white"} rounded-[24px] p-5 flex items-center justify-between shadow-[0_2px_10px_rgba(0,0,0,0.02)] relative overflow-hidden`}>
+                  <div key={item.id} className={`${item.bgColor || "bg-white"} rounded-[20px] sm:rounded-[24px] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.02)] relative overflow-hidden`}>
                     {index === 0 && <div className="w-1.5 h-[60%] bg-[#4E58CA] absolute left-0 top-1/2 -translate-y-1/2 rounded-r-full"></div>}
-                    <div className="flex items-center gap-5 ml-4">
-                      <div className={`w-14 h-14 rounded-[16px] ${item.bgColor ? "bg-black/5" : "bg-[#EEF0FF]"} flex items-center justify-center ${item.textColor || "text-[#4E58CA]"}`}>
+                    <div className="flex items-start sm:items-center gap-4 sm:gap-5 sm:ml-4 min-w-0">
+                      <div className={`w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-[16px] ${item.bgColor ? "bg-black/5" : "bg-[#EEF0FF]"} flex items-center justify-center ${item.textColor || "text-[#4E58CA]"}`}>
                         {item.iconType === 'flask' ? <IoFlaskOutline size={24} /> : item.iconType === 'palette' ? <IoColorPaletteOutline size={24} /> : <IoBookOutline size={24} />}
                       </div>
-                      <div>
-                        <h3 className="text-[17px] font-bold text-[#1D214E]">{item.title}</h3>
-                        <div className="flex items-center gap-3 mt-1">
+                      <div className="min-w-0">
+                        <h3 className="text-[16px] sm:text-[17px] font-bold text-[#1D214E] break-words">{item.title}</h3>
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-1">
                           <p className="text-[#7F8A9E] text-[13px] font-medium">{item.room}</p>
                           <div className="flex items-center gap-1 bg-[#EEF0FF] px-2 py-0.5 rounded-md">
                             <IoCalendarOutline size={12} className="text-[#4E58CA]" />
@@ -245,7 +236,7 @@ function Dashboard() {
                         </div>
                       </div>
                     </div>
-                    <div className="text-right">
+                    <div className="text-left sm:text-right sm:shrink-0">
                       <p className="text-[16px] font-bold text-[#1D214E] mb-1.5">{formatTime12h(item.time)}</p>
                       {index === 0 && (
                         <span className="bg-[#4E58CA] text-white text-[10px] font-bold px-3 py-1.5 rounded-full tracking-wider inline-block uppercase">
@@ -256,33 +247,33 @@ function Dashboard() {
                   </div>
                 ))
               ) : (
-                <div className="bg-white rounded-[24px] p-10 text-center border-2 border-dashed border-[#EBEBF2]">
+                <div className="bg-white rounded-[20px] sm:rounded-[24px] p-6 sm:p-10 text-center border-2 border-dashed border-[#EBEBF2]">
                   <p className="text-[#7F8A9E] font-bold">No lectures scheduled for today.</p>
                 </div>
               )}
             </div>
 
             {/* Banner */}
-            <div className="bg-[#4E58CA] rounded-[32px] p-10 flex items-center justify-between relative overflow-hidden h-[240px]">
-              <div className="relative z-10 max-w-[65%]">
-                <h2 className="text-[32px] font-bold text-white mb-3">Boost your GPA!</h2>
-                <p className="text-white/80 text-[16px] leading-relaxed mb-6 font-medium pr-4">
+            <div className="bg-[#4E58CA] rounded-[24px] sm:rounded-[32px] p-6 sm:p-10 flex items-center justify-between relative overflow-hidden min-h-[220px] sm:h-[240px]">
+              <div className="relative z-10 max-w-full sm:max-w-[70%]">
+                <h2 className="text-[26px] sm:text-[32px] font-bold text-white mb-3">Boost your GPA!</h2>
+                <p className="text-white/80 text-[14px] sm:text-[16px] leading-relaxed mb-6 font-medium sm:pr-4">
                   Join the 'Advanced Study Techniques' workshop this weekend and get ahead of the curve. Limited seats available.
                 </p>
                 <button className="bg-white text-[#4E58CA] px-8 py-3.5 rounded-xl font-bold text-[15px] shadow-lg hover:bg-gray-50 transition-colors">
                   Register Now
                 </button>
               </div>
-              <div className="absolute right-[-20px] top-[20px] opacity-90 rotate-12">
-                <div className="w-[220px] h-[220px] bg-white/10 rounded-[40px] flex items-center justify-center backdrop-blur-md border border-white/20">
-                  <FaStar size={100} className="text-white" />
+              <div className="hidden sm:block absolute right-[-20px] top-[20px] opacity-90 rotate-12">
+                <div className="w-[180px] h-[180px] lg:w-[220px] lg:h-[220px] bg-white/10 rounded-[40px] flex items-center justify-center backdrop-blur-md border border-white/20">
+                  <FaStar size={90} className="text-white" />
                 </div>
               </div>
             </div>
           </div>
 
           {/* Right Col */}
-          <div className="bg-white rounded-[40px] p-8 shadow-[0_2px_20px_rgba(0,0,0,0.03)] relative flex flex-col h-full">
+          <div className="bg-white rounded-[24px] sm:rounded-[40px] p-5 sm:p-8 shadow-[0_2px_20px_rgba(0,0,0,0.03)] relative flex flex-col h-full">
             <div className="flex justify-between items-center mb-10">
               <h2 className="text-[22px] font-bold text-[#1D214E]">Quick Tasks</h2>
             </div>
@@ -343,13 +334,13 @@ function Dashboard() {
 }
 
 const TaskItem = ({ label, checked, onToggle, onDelete }) => (
-  <div className="flex justify-between items-center group">
-    <label className="flex items-center gap-4 cursor-pointer flex-1" onClick={onToggle}>
+  <div className="flex justify-between items-center gap-3 group">
+    <label className="flex items-center gap-4 cursor-pointer flex-1 min-w-0" onClick={onToggle}>
       <div className={`w-[22px] h-[22px] rounded-md border-[2px] flex items-center justify-center transition-colors shrink-0 ${checked ? "bg-[#4E58CA] border-[#4E58CA]" : "border-[#D1D5E0] bg-white group-hover:border-[#4E58CA]"
         }`}>
         {checked && <IoCheckmark className="text-white text-md" />}
       </div>
-      <span className={`text-[15px] font-semibold transition-colors truncate max-w-[200px] ${checked ? "text-[#A0A5BA] line-through decoration-[1.5px]" : "text-[#1D214E]"
+      <span className={`text-[15px] font-semibold transition-colors truncate max-w-full ${checked ? "text-[#A0A5BA] line-through decoration-[1.5px]" : "text-[#1D214E]"
         }`}>
         {label}
       </span>

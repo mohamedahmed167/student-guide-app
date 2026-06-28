@@ -1,7 +1,6 @@
-export const API_BASE_URL = import.meta.env.DEV
-  ? "/api"
-  : import.meta.env.VITE_API_BASE_URL ||
-    "https://ahmedamara.pythonanywhere.com/api";
+import { env } from "../environment/environment";
+
+export const API_BASE_URL = env.baseUrl;
 
 export const LEVEL_LABELS = {
   1: "First Year",

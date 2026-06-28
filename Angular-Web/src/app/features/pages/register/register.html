@@ -1,0 +1,78 @@
+<main class="grid min-h-screen place-items-center bg-[#f8f7fc] px-5 py-10 font-sans text-[#292647]">
+  <section class="w-full max-w-[650px] rounded-[2.25rem] bg-white px-7 py-11 shadow-[0_24px_55px_rgba(42,38,71,0.1)] sm:px-10">
+    <div class="mb-9 flex justify-center gap-3 text-2xl font-bold tracking-tight">
+      <svg class="size-7 text-[#3d48bd]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m2 9.2 10-4 10 4-10 4-10-4Zm3.3 3.5v3.8c1.9 1.5 4.2 2.3 6.7 2.3s4.8-.8 6.7-2.3v-3.8l-6.7 2.7-6.7-2.7ZM21 10.3v5.2h-1.5v-4.6L21 10.3Z" /></svg>
+      <span>Student Guide</span>
+    </div>
+
+    <header class="mb-10 text-center">
+      <h1 class="text-3xl font-extrabold tracking-tight sm:text-[2.1rem]">Create an Account</h1>
+      <p class="mt-4 text-base font-medium text-[#64617c]">Join the platform to manage your academic journey</p>
+    </header>
+
+    <form [formGroup]="registerForm" (ngSubmit)="submit()" novalidate>
+      @if (errorMessage()) {
+        <p class="mb-5 rounded-xl bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700" role="alert">{{ errorMessage() }}</p>
+      }
+
+      <div class="grid gap-x-5 sm:grid-cols-2">
+        <div class="mb-5">
+          <label for="full_name" class="mb-2 block text-sm font-bold">Full Name</label>
+          <input id="full_name" type="text" autocomplete="name" formControlName="full_name" placeholder="Enter your full name" class="h-14 w-full rounded-2xl bg-[#ebe9f5] px-5 text-base font-medium outline-none placeholder:text-[#a3a0b8] focus:ring-2 focus:ring-[#5966e9]" />
+        </div>
+        <div class="mb-5">
+          <label for="department" class="mb-2 block text-sm font-bold">Department</label>
+          <select id="department" formControlName="department" class="h-14 w-full rounded-2xl bg-[#ebe9f5] px-5 text-base font-medium outline-none focus:ring-2 focus:ring-[#5966e9]">
+            <option value="" disabled>{{ isLoadingDepartments() ? 'Loading departments…' : 'Choose department' }}</option>
+            @for (department of departments(); track department.department_id) { <option [value]="department.department_id">{{ department.name }}</option> }
+          </select>
+        </div>
+        <div class="mb-5">
+          <label for="username" class="mb-2 block text-sm font-bold">Username</label>
+          <input id="username" type="text" autocomplete="username" formControlName="username" placeholder="Choose a username" class="h-14 w-full rounded-2xl bg-[#ebe9f5] px-5 text-base font-medium outline-none placeholder:text-[#a3a0b8] focus:ring-2 focus:ring-[#5966e9]" />
+        </div>
+        <div class="mb-5">
+          <label for="current_level" class="mb-2 block text-sm font-bold">Academic Year</label>
+          <select id="current_level" formControlName="current_level" class="h-14 w-full rounded-2xl bg-[#ebe9f5] px-5 text-base font-medium outline-none focus:ring-2 focus:ring-[#5966e9]">
+            <option value="" disabled>Select year</option>
+            @for (year of academicYears; track year.level) { <option [value]="year.level">{{ year.label }}</option> }
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-5">
+        <label for="email" class="mb-2 block text-sm font-bold">Email</label>
+        <input id="email" type="email" autocomplete="email" formControlName="email" placeholder="name@university.edu" class="h-14 w-full rounded-2xl bg-[#ebe9f5] px-5 text-base font-medium outline-none placeholder:text-[#a3a0b8] focus:ring-2 focus:ring-[#5966e9]" />
+        @if (registerForm.controls.email.touched && registerForm.controls.email.invalid) { <p class="mt-1.5 text-xs font-medium text-rose-600">Enter a valid email address.</p> }
+      </div>
+
+      <div class="grid gap-x-5 sm:grid-cols-2">
+        <div class="mb-5">
+          <label for="password" class="mb-2 block text-sm font-bold">Password</label>
+          <div class="flex h-14 items-center rounded-2xl bg-[#ebe9f5] px-5 focus-within:ring-2 focus-within:ring-[#5966e9]">
+            <input id="password" [type]="showPassword() ? 'text' : 'password'" autocomplete="new-password" formControlName="password" placeholder="••••••••" class="h-full min-w-0 flex-1 bg-transparent text-base font-medium outline-none placeholder:text-[#a3a0b8]" />
+            <button type="button" class="text-[#8d8aa5]" (click)="showPassword.set(!showPassword())" [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'">◉</button>
+          </div>
+        </div>
+        <div class="mb-5">
+          <label for="confirm_password" class="mb-2 block text-sm font-bold">Confirm Password</label>
+          <div class="flex h-14 items-center rounded-2xl bg-[#ebe9f5] px-5 focus-within:ring-2 focus-within:ring-[#5966e9]">
+            <input id="confirm_password" [type]="showConfirmPassword() ? 'text' : 'password'" autocomplete="new-password" formControlName="confirm_password" placeholder="••••••••" class="h-full min-w-0 flex-1 bg-transparent text-base font-medium outline-none placeholder:text-[#a3a0b8]" />
+            <button type="button" class="text-[#8d8aa5]" (click)="showConfirmPassword.set(!showConfirmPassword())" [attr.aria-label]="showConfirmPassword() ? 'Hide password' : 'Show password'">◉</button>
+          </div>
+        </div>
+      </div>
+      @if (registerForm.touched && registerForm.hasError('passwordMismatch')) { <p class="-mt-2 mb-4 text-xs font-medium text-rose-600">Passwords do not match.</p> }
+
+      <label class="mb-8 flex cursor-pointer items-center justify-between gap-4 rounded-2xl bg-[#ebe9f5] p-5">
+        <span><span class="block text-sm font-bold">Use invite code</span><span class="mt-1 block text-xs font-medium text-[#64617c]">Enable this to register with leader access.</span></span>
+        <input type="checkbox" formControlName="useInviteCode" class="peer sr-only" />
+        <span class="relative h-8 w-14 rounded-full bg-[#bab7cd] transition peer-checked:bg-[#5e6bea] after:absolute after:left-1 after:top-1 after:size-6 after:rounded-full after:bg-white after:shadow-sm after:transition peer-checked:after:translate-x-6"></span>
+      </label>
+
+      <button type="submit" [disabled]="isSubmitting()" class="flex h-14 w-full items-center justify-center rounded-full bg-[#5e6bea] px-5 text-base font-bold text-white shadow-[0_12px_22px_rgba(94,107,234,0.3)] transition hover:bg-[#4e5bd7] disabled:cursor-not-allowed disabled:opacity-70">{{ isSubmitting() ? 'Creating account...' : 'Complete Registration' }}</button>
+    </form>
+
+    <p class="mt-8 text-center text-sm font-medium text-[#64617c]">Already have an account? <a routerLink="/login" class="font-bold text-[#3d48bd] hover:underline">Sign in instead</a></p>
+  </section>
+</main>

@@ -1,0 +1,58 @@
+<section class="announcements-shell" aria-labelledby="announcements-title">
+  <aside class="channel-list" aria-label="Announcement channels">
+    <div class="channel-list__heading">
+      <h2>Channels</h2>
+      <button type="button" aria-label="Add channel" title="Add channel">+</button>
+    </div>
+    @for (channel of channels; track channel.name) {
+      <button type="button" class="channel" [class.channel--active]="channel.active">
+        <span class="channel__icon">{{ channel.icon }}</span>
+        <span class="channel__copy">
+          <span class="channel__topline"><strong>{{ channel.name }}</strong>@if (channel.badge) { <small>{{ channel.badge }}</small> }</span>
+          <span>{{ channel.description }}</span>
+        </span>
+      </button>
+    }
+  </aside>
+
+  <div class="announcement-feed">
+    <header class="feed-header">
+      <div class="feed-title">
+        <span class="feed-title__mark">📣</span>
+        <div><h1 id="announcements-title">General</h1><p>Global updates for all students and faculty</p></div>
+      </div>
+      <div class="feed-actions"><button type="button" aria-label="Search announcements">⌕</button><button type="button" aria-label="More options">⋮</button></div>
+    </header>
+
+    <div class="feed-scroll">
+      <div class="date-divider"><span></span><p>ANNOUNCEMENTS</p><span></span></div>
+
+      @if (isLoading()) {
+        <p class="state-message">Loading announcements…</p>
+      } @else if (error() && !chats().length) {
+        <div class="state-message state-message--error"><p>{{ error() }}</p><button type="button" (click)="loadChats()">Try again</button></div>
+      } @else if (!chats().length) {
+        <p class="state-message">No announcements yet. Send the first update to your cohort.</p>
+      } @else {
+        @for (chat of chats(); track chat.message_id) {
+          <article class="announcement-card">
+            <div class="avatar">{{ (chat.sender_name || 'A').slice(0, 1).toUpperCase() }}</div>
+            <div class="announcement-card__content">
+              <div class="announcement-card__meta"><strong>{{ chat.sender_name || 'Admin' }}</strong><span class="role">ADMIN</span><time>{{ chat.created_at | date:'shortTime' }}</time></div>
+              <h2>{{ chat.sender_name || 'Admin' }} announcement <span>· Level {{ chat.target_level }}</span></h2>
+              <p>{{ chat.content }}</p>
+              <footer><span>◉ Sent to level {{ chat.target_level }} students</span><time>{{ chat.created_at | date:'MMM d, y' }}</time></footer>
+            </div>
+          </article>
+        }
+      }
+    </div>
+
+    <form class="composer" (ngSubmit)="sendAnnouncement()">
+      <label for="announcement-content">Write a general announcement</label>
+      <textarea id="announcement-content" name="content" [(ngModel)]="draft" maxlength="280" placeholder="Write a general announcement…" [disabled]="isSending()"></textarea>
+      <div class="composer__footer"><span>{{ draft.length }}/280</span><button type="submit" [disabled]="!draft.trim() || isSending()">{{ isSending() ? 'Sending…' : 'Send Announcement' }}</button></div>
+      @if (error() && chats().length) { <p class="composer__error" role="alert">{{ error() }}</p> }
+    </form>
+  </div>
+</section>

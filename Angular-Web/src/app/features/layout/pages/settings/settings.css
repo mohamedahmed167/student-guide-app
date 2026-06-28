@@ -1,0 +1,111 @@
+:host {
+    display: block;
+    min-height: calc(100vh - 4rem);
+    background: #f7f8fc;
+    color: #20263a;
+	padding: 1rem;
+    font-family: Arial, sans-serif;
+}
+.settings-page header > p {
+    margin: 0 0 8px;
+    color: #5262cf;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+}
+.settings-page h1 {
+    margin: 0;
+    font-size: 29px;
+    letter-spacing: -0.04em;
+}
+.settings-page header span {
+    display: block;
+    margin-top: 8px;
+    color: #747a8b;
+    font-size: 12px;
+}
+.settings-card {
+    margin-top: 28px;
+    border: 1px solid #e2e5ee;
+    border-radius: 12px;
+    background: #fff;
+    padding: 24px;
+    box-shadow: 0 3px 14px #28315b0a;
+}
+.identity {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    border-bottom: 1px solid #eceef3;
+    padding-bottom: 20px;
+}
+.identity > span {
+    display: grid;
+    width: 48px;
+    height: 48px;
+    place-items: center;
+    border-radius: 50%;
+    background: #4c5dcc;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 800;
+}
+.identity h2 {
+    margin: 0;
+    font-size: 18px;
+}
+.identity p {
+    margin: 5px 0 0;
+    color: #777d8c;
+    font-size: 11px;
+}
+dl {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin: 8px 0 0;
+}
+dl div {
+    border-bottom: 1px solid #edf0f4;
+    padding: 17px 0;
+}
+dt {
+    color: #7a8090;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+dd {
+    margin: 6px 0 0;
+    color: #30374d;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+.state {
+    margin: 80px auto;
+    color: #757b8d;
+    text-align: center;
+}
+.error {
+    color: #b33744;
+}
+.error button {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+}
+@media (max-width: 640px) {
+    .settings-page {
+        padding: 76px 16px 22px;
+    }
+    .settings-card {
+        padding: 18px;
+    }
+    dl {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,4 +1,5 @@
-import { apiRequest, clearTokens, setTokens } from "./client";
+import { env } from "../environment/environment";
+import { apiRequest, clearTokens, persistTokensFromData } from "./client";
 import { mapStudentToUser } from "./mappers";
 
 export async function register({
@@ -10,7 +11,7 @@ export async function register({
   current_level,
   invite_code,
 }) {
-  const data = await apiRequest("/register/", {
+  const data = await apiRequest(env.endpoints.register, {
     method: "POST",
     auth: false,
     body: {
@@ -23,6 +24,7 @@ export async function register({
       ...(invite_code ? { invite_code } : {}),
     },
   });
+  persistTokensFromData(data);
 
   const student = data?.student || data;
   const user = mapStudentToUser(student, { email, username });
@@ -35,37 +37,30 @@ export async function register({
 }
 
 export async function login({ username, password }) {
-  const data = await apiRequest("/login/", {
+  const data = await apiRequest(env.endpoints.login, {
     method: "POST",
     auth: false,
     body: { username, password },
   });
-
-  const student = data?.student || data?.user || data;
-  const user = mapStudentToUser(student, { username });
-  saveSession(user);
-  return {
-    message: data?.message,
-    user,
-    raw: data,
-  };
+  persistTokensFromData(data);
+  return data;
 }
 
 export async function logout() {
   try {
-    await apiRequest("/logout/", { method: "POST" });
+    await apiRequest(env.endpoints.logout, { method: "POST" });
   } finally {
     clearTokens();
   }
 }
 
 export async function getMe() {
-  const data = await apiRequest("/me/");
+  const data = await apiRequest(env.endpoints.me);
   return mapStudentToUser(data?.student || data);
 }
 
 export async function verifyOtp({ email, otp_code }) {
-  return apiRequest("/verify-otp/", {
+  return apiRequest(env.endpoints.verifyOtp, {
     method: "POST",
     auth: false,
     body: { email, otp_code },

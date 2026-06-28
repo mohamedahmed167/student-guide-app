@@ -20,11 +20,11 @@ function SideBar() {
   };
 
   return (
-    <div className="w-[260px] h-screen bg-white flex flex-col justify-between py-8 px-6 border-r border-[#F0F0F5] sticky top-0 shrink-0">
+    <div className="hidden lg:flex w-[260px] h-screen bg-white flex-col justify-between py-8 px-6 border-r border-[#F0F0F5] sticky top-0 shrink-0">
       <div>
         <div className="flex items-center gap-3 px-2 mb-12">
           <div className="bg-[#4E58CA] p-2 rounded-lg text-white">
-             <FaGraduationCap size={20} />
+              <FaGraduationCap size={20} />
           </div>
           <span className="font-bold text-[20px] text-[#1D214E]">Student Guide</span>
         </div>
@@ -33,7 +33,6 @@ function SideBar() {
           <MenuItem icon={<MdOutlineDashboard size={22} />} label="DASHBOARD" path="/dashboard" currentPath={location.pathname} />
           <MenuItem icon={<FaGraduationCap size={22} />} label="ACADEMIC" path="/academic" currentPath={location.pathname} />
           <MenuItem icon={<BsBarChartFill size={22} />} label="GPA Calculator" path="/calculator" currentPath={location.pathname} />
-          <MenuItem icon={<IoCalendarOutline size={22} />} label="SCHEDULE" path="/schedule" currentPath={location.pathname} />
           <MenuItem icon={<IoLinkOutline size={22} />} label="QUICK LINKS" path="/links" currentPath={location.pathname} />
           <MenuItem icon={<FaRegUserCircle size={22} />} label="PROFILE" path="/profile" currentPath={location.pathname} />
         </nav>

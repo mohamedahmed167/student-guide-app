@@ -83,7 +83,7 @@ export default function NotificationBell({ size = 24 }) {
 
             {/* Dropdown Card */}
             {isOpen && (
-                <div className="absolute right-0 mt-3 w-[360px] bg-white rounded-[20px] shadow-[0_10px_30px_rgba(0,0,0,0.08)] border border-[#EBEBF2] z-50 overflow-hidden">
+                <div className="absolute right-0 mt-3 w-[calc(100vw-2rem)] max-w-[360px] bg-white rounded-[20px] shadow-[0_10px_30px_rgba(0,0,0,0.08)] border border-[#EBEBF2] z-50 overflow-hidden">
                     {/* Header */}
                     <div className="p-4 border-b border-[#EBEBF2] flex items-center justify-between bg-white">
                         <div className="flex items-center gap-2">
@@ -161,7 +161,7 @@ export default function NotificationBell({ size = 24 }) {
                                     <IoNotificationsOutline size={22} />
                                 </div>
                                 <h4 className="font-bold text-[#1D214E] text-[13px] mb-1">No alerts found</h4>
-                                <p className="text-[#7F8A9E] text-[11px] max-w-[210px] leading-relaxed">You are all caught up with your lectures, exams and assignments.</p>
+                                <p className="text-[#7F8A9E] text-[11px] max-w-full sm:max-w-[210px] leading-relaxed">You are all caught up with your lectures, exams and assignments.</p>
                             </div>
                         )}
                     </div>

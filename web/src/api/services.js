@@ -1,3 +1,4 @@
+import { env } from "../environment/environment";
 import { apiRequest } from "./client";
 import {
   mapApiChatToAnnouncement,
@@ -7,21 +8,21 @@ import {
 } from "./mappers";
 
 export async function getDepartments() {
-  return apiRequest("/departments/", { auth: false });
+  return apiRequest(env.endpoints.departments, { auth: false });
 }
 
 export async function getStudents() {
-  return apiRequest("/students/", { auth: false });
+  return apiRequest(env.endpoints.students, { auth: false });
 }
 
 export async function getSchedules() {
-  const data = await apiRequest("/schedules/", { auth: false });
+  const data = await apiRequest(env.endpoints.schedules, { auth: false });
   return Array.isArray(data) ? data.map(mapApiScheduleToLocal) : [];
 }
 
 export async function createSchedule(formData) {
   const body = mapLocalScheduleToApi(formData);
-  const created = await apiRequest("/schedules/", {
+  const created = await apiRequest(env.endpoints.schedules, {
     method: "POST",
     body,
   });
@@ -29,24 +30,24 @@ export async function createSchedule(formData) {
 }
 
 export async function deleteSchedule(scheduleId) {
-  return apiRequest(`/schedules/${scheduleId}/`, { method: "DELETE" });
+  return apiRequest(`${env.endpoints.schedules}${scheduleId}/`, { method: "DELETE" });
 }
 
 export async function getExams() {
-  return apiRequest("/exams/", { auth: false });
+  return apiRequest(env.endpoints.exams, { auth: false });
 }
 
 export async function createExam(exam) {
-  return apiRequest("/exams/", { method: "POST", body: exam });
+  return apiRequest(env.endpoints.exams, { method: "POST", body: exam });
 }
 
 export async function getTodos() {
-  const data = await apiRequest("/todos/");
+  const data = await apiRequest(env.endpoints.todos);
   return Array.isArray(data) ? data.map(mapApiTodoToLocal) : [];
 }
 
 export async function createTodo(task_name) {
-  const created = await apiRequest("/todos/", {
+  const created = await apiRequest(env.endpoints.todos, {
     method: "POST",
     body: { task_name, is_completed: false },
   });
@@ -54,7 +55,7 @@ export async function createTodo(task_name) {
 }
 
 export async function updateTodo(id, updates) {
-  const updated = await apiRequest(`/todos/${id}/`, {
+  const updated = await apiRequest(`${env.endpoints.todos}${id}/`, {
     method: "PATCH",
     body: updates,
   });
@@ -62,16 +63,16 @@ export async function updateTodo(id, updates) {
 }
 
 export async function deleteTodo(id) {
-  return apiRequest(`/todos/${id}/`, { method: "DELETE" });
+  return apiRequest(`${env.endpoints.todos}${id}/`, { method: "DELETE" });
 }
 
 export async function getChats() {
-  const data = await apiRequest("/chats/");
+  const data = await apiRequest(env.endpoints.chats);
   return Array.isArray(data) ? data.map(mapApiChatToAnnouncement) : [];
 }
 
 export async function createChat(content) {
-  const created = await apiRequest("/chats/", {
+  const created = await apiRequest(env.endpoints.chats, {
     method: "POST",
     body: { content },
   });
@@ -79,23 +80,23 @@ export async function createChat(content) {
 }
 
 export async function updateProfile(formData) {
-  const body = new FormData();
+  const body = {};
 
-  if (formData.name) body.append("full_name", formData.name);
-  if (formData.department) body.append("department", formData.department);
-  if (formData.currentLevel) body.append("current_level", formData.currentLevel);
-  if (formData.gpa !== undefined) body.append("current_cgpa", String(formData.gpa));
-  if (formData.credits !== undefined) body.append("total_credits", formData.credits);
-  if (formData.coverImage instanceof File) body.append("cover_image", formData.coverImage);
+  if (formData.name) body.full_name = formData.name;
+  if (formData.email) body.email = formData.email;
+  if (formData.department) body.department = formData.department;
+  if (formData.currentLevel) body.current_level = formData.currentLevel;
+  if (formData.gpa !== undefined) body.current_cgpa = String(formData.gpa);
+  if (formData.credits !== undefined) body.total_credits = formData.credits;
 
-  return apiRequest("/profile/update/", {
+  return apiRequest(env.endpoints.profileUpdate, {
     method: "PATCH",
     body,
   });
 }
 
 export async function changePassword({ old_password, new_password }) {
-  return apiRequest("/profile/change-password/", {
+  return apiRequest(env.endpoints.changePassword, {
     method: "PUT",
     body: { old_password, new_password },
   });

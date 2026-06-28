@@ -118,6 +118,10 @@ class StudentMeSerializer(serializers.ModelSerializer):
         ]
         depth = 1
 
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(style={'input_type': 'password'})
+
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8)
     
@@ -146,7 +150,14 @@ class RegisterSerializer(serializers.ModelSerializer):
         if not re.search(r'[a-zA-Z]', value):
             raise serializers.ValidationError("Password must contain at least one letter.")
         return value
-
+    def validate_username(self, value):
+        if len(value) < 5:
+            raise serializers.ValidationError("Username must be at least 5 characters long.")
+        
+        if not value.isalnum():
+            raise serializers.ValidationError("Username can only contain letters and numbers.")
+        
+        return value
     def create(self, validated_data):
         full_name = validated_data.pop('full_name')
         department = validated_data.pop('department')
@@ -160,11 +171,10 @@ class RegisterSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         
-        user.is_active = False 
+        user.is_active = True
         user.save()
 
         assigned_role = 'leader' if invite_code == 'LEADER_SECRET_2026' else 'student'
-        otp = str(random.randint(100000, 999999))
 
         from django.utils import timezone
         current_date = timezone.now().date()
@@ -182,19 +192,8 @@ class RegisterSerializer(serializers.ModelSerializer):
             virtual_start_year=calculated_start_year, 
             role=assigned_role,
             cover_image=cover_image,
-            otp_code=otp 
         )
 
-        try:
-            send_mail(
-                subject='Your Account Activation Code - Student Guide',
-                message=f'Hello {full_name},\n\nYour activation code is: {otp}\n\nPlease enter this code in the app to activate your account successfully.',
-                from_email=settings.EMAIL_HOST_USER,
-                recipient_list=[validated_data['email']],
-                fail_silently=False,
-            )
-        except Exception as e:
-            print(f"Error sending email: {e}")
         return user
 
 class StudentUpdateSerializer(serializers.ModelSerializer):
@@ -249,9 +248,7 @@ class ChangePasswordSerializer(serializers.Serializer):
         user.save()
         return user
     
-class VerifyOTPSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True)
-    otp_code = serializers.CharField(max_length=6, required=True)
+
 
 class CohortMessageSerializer(serializers.ModelSerializer):
     sender_name = serializers.CharField(source='sender.student_profile.full_name', read_only=True)

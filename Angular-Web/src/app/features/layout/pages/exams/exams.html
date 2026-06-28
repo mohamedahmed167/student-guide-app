@@ -1,0 +1,43 @@
+<section class="page" aria-labelledby="exams-title">
+	<header class="items-center">
+		<div>
+			<p class="eyebrow">ASSESSMENTS</p>
+			<h1 id="exams-title">Exams Manager</h1>
+			<p>Important dates for your current cohort.</p>
+		</div><button class="primary" type="button" (click)="toggleForm()">{{ showForm() ? 'Close form' : '+ Add exam'
+			}}</button>
+	</header>
+	@if (showForm()) { <form class="form" (ngSubmit)="create()">
+		<h2>Add an exam <span>Level {{ profile.current_level || 1 }}</span></h2>
+		<div class="grid"><label>Subject<select name="subject" [(ngModel)]="form.subject" required>
+					<option value="" disabled>Select subject</option>@for (subject of subjects(); track
+					subject.subject_id) { <option [value]="subject.subject_id">{{ subject.subject_code }} — {{
+						subject.name }}</option> }
+				</select></label><label>Exam type<select name="type" [(ngModel)]="form.exam_type">
+					<option value="midterm">Midterm</option>
+					<option value="final">Final</option>
+					<option value="quiz">Quiz</option>
+					<option value="practical">Practical</option>
+				</select></label><label>Date<input name="date" type="date" [(ngModel)]="form.exam_date"
+					required /></label><label>Location<input name="location" [(ngModel)]="form.hall_location"
+					placeholder="e.g. Main Hall" /></label><label>Starts<input name="start" type="time"
+					[(ngModel)]="form.start_time" /></label><label>Ends<input name="end" type="time"
+					[(ngModel)]="form.end_time" /></label></div>@if (error()) { <p class="error">{{ error() }}</p> }
+		<footer><button class="secondary" type="button" (click)="toggleForm()">Cancel</button><button class="primary"
+				type="submit" [disabled]="isSaving() || !subjects().length">{{ isSaving() ? 'Saving…' : 'Add exam'
+				}}</button></footer>
+	</form> }
+	@if (isLoading()) { <p class="state">Loading exams…</p> } @else if (!exams().length && !error()) { <div
+		class="empty">
+		<h2>No exams scheduled</h2>
+		<p>Use the form to add the first important date.</p>
+	</div> } @else { <div class="exam-grid">@for (exam of exams(); track exam.exam_id) { <article class="exam">
+			<time><strong>{{ exam.exam_date | date:'d' }}</strong><span>{{ exam.exam_date | date:'MMM' }}</span></time>
+			<div><span class="tag">{{ exam.exam_type || 'Exam' }}</span>
+				<h2>{{ exam.subject.name }}</h2>
+				<p>{{ exam.subject.subject_code }} · {{ exam.hall_location || 'Location to be announced' }}</p>@if
+				(exam.start_time) { <small>{{ exam.start_time }}@if (exam.end_time) { — {{ exam.end_time }} }</small> }
+			</div>
+		</article> }</div> } @if (error() && !showForm()) { <p class="error">{{ error() }} <button type="button"
+			(click)="load()">Retry</button></p> }
+</section>

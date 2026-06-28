@@ -1,0 +1,50 @@
+:host { display: block; min-height: calc(100vh - 4rem); color: #171b2f; font-family: Arial, sans-serif; }
+button, textarea { font: inherit; }
+button { cursor: pointer; }
+.announcements-shell { display: grid; min-height: calc(100vh - 4rem); grid-template-columns: 260px minmax(0, 1fr); background: #fff; }
+.channel-list { border-right: 1px solid #e4e5ed; padding: 25px 16px; }
+.channel-list__heading { display: flex; align-items: center; justify-content: space-between; padding: 0 9px 13px; }
+.channel-list__heading h2 { margin: 0; font-size: 15px; font-weight: 700; }
+.channel-list__heading button, .feed-actions button { border: 0; background: transparent; color: #33384e; font-size: 21px; }
+.channel { display: flex; width: 100%; gap: 8px; border: 1px solid transparent; border-radius: 8px; background: transparent; padding: 11px 10px; text-align: left; color: #3a4054; transition: .2s ease; }
+.channel:hover { background: #f6f6fc; }
+.channel--active { border-color: #5967e7; background: #f0f1ff; }
+.channel__icon { font-size: 13px; padding-top: 1px; }
+.channel__copy { min-width: 0; display: grid; gap: 5px; font-size: 10px; line-height: 1.25; }
+.channel__copy > span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #606779; }
+.channel__topline { display: flex; align-items: center; justify-content: space-between; gap: 4px; font-size: 12px; }
+.channel--active strong { color: #4152c7; }
+.channel small { border-radius: 10px; background: #f34b59; padding: 2px 5px; color: #fff; font-size: 7px; font-weight: 800; }
+.announcement-feed { display: grid; min-width: 0; grid-template-rows: auto minmax(0, 1fr) auto; }
+.feed-header { display: flex; min-height: 83px; align-items: center; justify-content: space-between; border-bottom: 1px solid #ececf2; padding: 15px 28px; }
+.feed-title { display: flex; align-items: center; gap: 10px; }
+.feed-title__mark { font-size: 22px; }
+.feed-title h1 { margin: 0; font-size: 15px; line-height: 1.15; }
+.feed-title p { margin: 2px 0 0; color: #666b7a; font-size: 10px; }
+.feed-actions { display: flex; gap: 12px; }
+.feed-scroll { overflow: auto; padding: 18px 28px 28px; background: #fff; }
+.date-divider { display: flex; align-items: center; gap: 12px; margin: 5px 0 25px; }
+.date-divider span { height: 1px; flex: 1; background: #dddfe7; }
+.date-divider p { margin: 0; color: #5f6576; font-size: 9px; font-weight: 600; }
+.announcement-card { display: flex; gap: 12px; margin-bottom: 14px; border-left: 3px solid #5261de; border-radius: 11px; background: #fff; padding: 16px; box-shadow: 0 2px 11px rgba(34, 37, 67, .09); }
+.avatar { display: grid; flex: 0 0 auto; width: 32px; height: 32px; place-items: center; border-radius: 50%; background: #078d91; color: #fff; font-size: 13px; font-weight: 800; }
+.announcement-card__content { min-width: 0; flex: 1; }
+.announcement-card__meta { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; color: #43495c; font-size: 10px; }
+.announcement-card__meta strong { font-size: 11px; }
+.role { border-radius: 10px; background: #4958c8; padding: 2px 6px; color: #fff; font-size: 7px; font-weight: 800; }
+.announcement-card h2 { margin: 7px 0 6px; color: #4652c7; font-size: 14px; font-weight: 700; }
+.announcement-card h2 span { color: #606779; font-size: 11px; font-weight: 500; }
+.announcement-card p { margin: 0; color: #54596a; font-size: 10px; line-height: 1.5; }
+.announcement-card footer { display: flex; justify-content: space-between; gap: 10px; margin-top: 12px; border-top: 1px solid #e3e4ec; padding-top: 9px; color: #66809e; font-size: 9px; }
+.state-message { margin: 48px auto; color: #686e80; font-size: 13px; text-align: center; }
+.state-message--error button { margin-top: 10px; border: 0; border-radius: 7px; background: #4655cf; padding: 7px 12px; color: #fff; }
+.composer { border-top: 1px solid #e4e5ed; padding: 16px 28px 18px; background: #fff; }
+.composer label { display: block; color: #626779; font-size: 10px; font-weight: 600; }
+.composer textarea { box-sizing: border-box; display: block; width: 100%; min-height: 57px; resize: vertical; border: 0; outline: 0; padding: 7px 0; color: #272b3e; font-size: 11px; }
+.composer textarea::placeholder { color: #777b89; }
+.composer__footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #5c6172; font-size: 9px; }
+.composer__footer button { border: 0; border-radius: 22px; background: linear-gradient(90deg, #3f4fc7, #02bfd0); padding: 10px 20px; color: #fff; font-size: 11px; font-weight: 700; box-shadow: 0 4px 10px rgba(53, 74, 198, .22); }
+.composer__footer button:disabled { cursor: not-allowed; opacity: .55; box-shadow: none; }
+.composer__error { margin: 8px 0 0; color: #c53846; font-size: 10px; }
+@media (max-width: 767px) { .announcements-shell { grid-template-columns: 1fr; } .channel-list { display: none; } .feed-header { padding-left: 70px; padding-right: 16px; } .feed-scroll { padding: 16px; } .composer { padding: 14px 16px; } .announcement-card { padding: 13px; } }
+@media (max-width: 430px) { .announcement-card footer { align-items: flex-start; flex-direction: column; } .announcement-card h2 { font-size: 13px; } .feed-title p { max-width: 190px; } }

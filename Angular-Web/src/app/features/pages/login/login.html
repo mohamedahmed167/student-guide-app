@@ -1,0 +1,170 @@
+<main class="grid min-h-screen place-items-center bg-[#f8f7fc] px-5 py-10 font-sans text-[#292647]">
+    <section
+        class="relative w-full max-w-[440px] rounded-[2.25rem] bg-white px-8 py-11 shadow-[0_24px_55px_rgba(42,38,71,0.1)] sm:px-10"
+    >
+        <div
+            class="absolute -right-5 -top-6 flex items-center gap-3 rounded-full bg-[#292647] px-5 py-3 text-xs font-medium text-white shadow-lg shadow-[#292647]/20"
+        >
+            <svg
+                class="size-5 shrink-0 text-amber-400"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+            >
+                <circle cx="12" cy="12" r="10" />
+                <path
+                    d="M12 7.25v.5m0 3v6"
+                    stroke="#292647"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                />
+            </svg>
+            <span>University portal<br />status: Optimal</span>
+        </div>
+
+        <div class="mb-10 flex justify-center gap-3 text-xl font-bold tracking-tight">
+            <svg
+                class="size-7 text-[#3d48bd]"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+            >
+                <path
+                    d="m2 9.2 10-4 10 4-10 4-10-4Zm3.3 3.5v3.8c1.9 1.5 4.2 2.3 6.7 2.3s4.8-.8 6.7-2.3v-3.8l-6.7 2.7-6.7-2.7ZM21 10.3v5.2h-1.5v-4.6L21 10.3Z"
+                />
+            </svg>
+            <span>Student Guide</span>
+        </div>
+
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl font-extrabold tracking-tight">Welcome Back</h1>
+            <p class="mx-auto mt-4 max-w-64 text-base font-medium leading-6 text-[#64617c]">
+                Continue your scholarly progress today.
+            </p>
+        </header>
+
+        <form [formGroup]="loginForm" (ngSubmit)="submit()" novalidate>
+            @if (errorMessage()) {
+                <p
+                    class="mb-5 rounded-xl bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700"
+                    role="alert"
+                >
+                    {{ errorMessage() }}
+                </p>
+            }
+
+            <div class="mb-5">
+                <label for="username" class="mb-2 block text-sm font-bold">Username</label>
+                <div
+                    class="flex h-14 items-center gap-3 rounded-2xl bg-[#ebe9f5] px-5 focus-within:ring-2 focus-within:ring-[#5966e9]"
+                >
+                    <svg
+                        class="size-5 shrink-0 text-[#8d8aa5]"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        aria-hidden="true"
+                    >
+                        <circle cx="12" cy="12" r="3" />
+                        <path
+                            d="M19 12a7 7 0 1 0-2.05 4.95L19 19v-4h-2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </svg>
+                    <input
+                        id="username"
+                        type="text"
+                        autocomplete="username"
+                        formControlName="username"
+                        placeholder="your_username"
+                        class="h-full min-w-0 flex-1 bg-transparent text-base font-medium text-[#292647] outline-none placeholder:text-[#a3a0b8]"
+                    />
+                </div>
+                @if (loginForm.controls.username.touched && loginForm.controls.username.invalid) {
+                    <p class="mt-1.5 text-xs font-medium text-rose-600">Username is required.</p>
+                }
+            </div>
+
+            <div class="mb-6">
+                <div class="mb-2 flex items-center justify-between">
+                    <label for="password" class="text-sm font-bold">Password</label>
+                    <a
+                        href="#"
+                        class="text-sm font-bold text-[#3d48bd] hover:underline"
+                        (click)="$event.preventDefault()"
+                        >Forgot?</a
+                    >
+                </div>
+                <div
+                    class="flex h-14 items-center gap-3 rounded-2xl bg-[#ebe9f5] px-5 focus-within:ring-2 focus-within:ring-[#5966e9]"
+                >
+                    <svg
+                        class="size-5 shrink-0 text-[#8d8aa5]"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        aria-hidden="true"
+                    >
+                        <rect x="4" y="10" width="16" height="10" rx="2" />
+                        <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke-linecap="round" />
+                    </svg>
+                    <input
+                        id="password"
+                        [type]="showPassword() ? 'text' : 'password'"
+                        autocomplete="current-password"
+                        formControlName="password"
+                        placeholder="••••••••"
+                        class="h-full min-w-0 flex-1 bg-transparent text-base font-medium text-[#292647] outline-none placeholder:text-[#a3a0b8]"
+                    />
+                    <button
+                        type="button"
+                        class="text-[#8d8aa5] transition hover:text-[#3d48bd]"
+                        [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+                        (click)="showPassword.set(!showPassword())"
+                    >
+                        <svg
+                            class="size-5"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            aria-hidden="true"
+                        >
+                            <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+                            <circle cx="12" cy="12" r="2.5" />
+                        </svg>
+                    </button>
+                </div>
+                @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
+                    <p class="mt-1.5 text-xs font-medium text-rose-600">Password is required.</p>
+                }
+            </div>
+
+            <button
+                type="submit"
+                [disabled]="isSubmitting()"
+                class="flex h-14 w-full items-center justify-center gap-3 rounded-full bg-[#5e6bea] px-5 text-base font-bold text-white shadow-[0_12px_22px_rgba(94,107,234,0.3)] transition hover:bg-[#4e5bd7] disabled:cursor-not-allowed disabled:opacity-70"
+            >
+                @if (isSubmitting()) {
+                    <span
+                        class="size-5 animate-spin rounded-full border-2 border-white/40 border-t-white"
+                    ></span>
+                    Signing in...
+                } @else {
+                    Sign In to Dashboard
+                    <span aria-hidden="true">→</span>
+                }
+            </button>
+        </form>
+
+        <p class="mt-8 text-center text-sm font-medium text-[#64617c]">
+            New to the guide?
+            <a routerLink="/register" class="font-bold text-[#3d48bd] hover:underline"
+                >Create Student Account</a
+            >
+        </p>
+    </section>
+</main>

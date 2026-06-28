@@ -65,7 +65,7 @@ function QuickLinkCard({ item }) {
 
   return (
     <article
-      className={`rounded-[10px] bg-white p-6 shadow-[0_10px_25px_rgba(29,33,78,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_35px_rgba(29,33,78,0.09)] ${
+      className={`rounded-[10px] bg-white p-5 sm:p-6 shadow-[0_10px_25px_rgba(29,33,78,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_35px_rgba(29,33,78,0.09)] ${
         item.featured ? "border-l-4 border-[#4E58CA]" : "border border-transparent"
       }`}
     >
@@ -104,14 +104,14 @@ export default function QuickLinks() {
     <div className="flex min-h-screen bg-[#F5F5FA] font-sans text-left" dir="ltr">
       <SideBar />
 
-      <main className="flex-1 overflow-y-auto">
-        <section className="px-10 py-10">
+      <main className="flex-1 w-full min-w-0 overflow-y-auto">
+        <section className="px-4 sm:px-6 lg:px-10 py-8 sm:py-10">
           <div className="mb-9 max-w-[650px]">
             <div className="mb-4 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.32em] text-[#4E58CA]">
               <IoLinkOutline size={14} />
               Navigation Hub
             </div>
-            <h1 className="text-[42px] font-extrabold leading-tight tracking-tight text-[#2A274D]">
+            <h1 className="text-[32px] sm:text-[42px] font-extrabold leading-tight tracking-tight text-[#2A274D]">
               Quick <span className="text-[#4E58CA]">Links</span>
             </h1>
             <p className="mt-4 text-[15px] font-medium leading-relaxed text-[#64617A]">
@@ -121,13 +121,13 @@ export default function QuickLinks() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
             {quickLinks.slice(0, 5).map((item) => (
               <QuickLinkCard key={item.title} item={item} />
             ))}
 
-            <article className="relative overflow-hidden rounded-[10px] bg-[#4E58CA] p-7 text-white shadow-[0_18px_35px_rgba(78,88,202,0.24)] md:col-span-2">
-              <div className="relative z-10 max-w-[70%]">
+            <article className="relative overflow-hidden rounded-[10px] bg-[#4E58CA] p-5 sm:p-7 text-white shadow-[0_18px_35px_rgba(78,88,202,0.24)] md:col-span-2">
+              <div className="relative z-10 max-w-full sm:max-w-[70%]">
                 <h3 className="text-[22px] font-bold leading-tight">
                   University Portal
                 </h3>
@@ -141,7 +141,7 @@ export default function QuickLinks() {
                   Launch Portal <IoOpenOutline size={15} />
                 </button>
               </div>
-              <div className="absolute right-7 top-1/2 flex h-20 w-20 -translate-y-1/2 items-center justify-center rounded-[20px] bg-white/16 text-white">
+              <div className="hidden sm:flex absolute right-7 top-1/2 h-20 w-20 -translate-y-1/2 items-center justify-center rounded-[20px] bg-white/16 text-white">
                 <IoSchoolOutline size={42} />
               </div>
             </article>
@@ -151,13 +151,13 @@ export default function QuickLinks() {
             ))}
           </div>
 
-          <section className="mt-12 grid grid-cols-1 gap-8 rounded-[14px] bg-[#EFEAFF] p-8 md:grid-cols-[220px_1fr]">
+          <section className="mt-10 sm:mt-12 grid grid-cols-1 gap-6 sm:gap-8 rounded-[14px] bg-[#EFEAFF] p-5 sm:p-8 md:grid-cols-[220px_1fr]">
             <LibraryPreview />
             <div>
               <span className="inline-flex rounded-full bg-[#F6D778] px-4 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#7B5A00]">
                 New Resource
               </span>
-              <h2 className="mt-5 text-[28px] font-extrabold leading-tight text-[#25264F]">
+              <h2 className="mt-5 text-[24px] sm:text-[28px] font-extrabold leading-tight text-[#25264F]">
                 Digital Dissertation Archives
               </h2>
               <p className="mt-4 max-w-[560px] text-[14px] font-medium leading-relaxed text-[#64617A]">
@@ -166,19 +166,19 @@ export default function QuickLinks() {
                 repository for advanced academic research.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
-                <button className="flex items-center gap-2 rounded-full bg-[#4E58CA] px-6 py-3 text-[13px] font-bold text-white transition-colors hover:bg-[#3f49b3]">
+                <button className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-[#4E58CA] px-6 py-3 text-[13px] font-bold text-white transition-colors hover:bg-[#3f49b3]">
                   Explore Repository <IoArrowForward size={16} />
                 </button>
-                <button className="rounded-full border border-[#4E58CA] px-6 py-3 text-[13px] font-bold text-[#4E58CA] transition-colors hover:bg-white">
+                <button className="w-full sm:w-auto rounded-full border border-[#4E58CA] px-6 py-3 text-[13px] font-bold text-[#4E58CA] transition-colors hover:bg-white">
                   Learn More
                 </button>
               </div>
             </div>
           </section>
 
-          <footer className="mt-16 flex max-w-[900px] flex-wrap items-center justify-between gap-4 text-[11px] font-semibold text-[#7F78A8]">
+          <footer className="mt-12 sm:mt-16 flex max-w-[900px] flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-4 text-[11px] font-semibold text-[#7F78A8]">
             <span>© 2024 University Student Services. All rights reserved.</span>
-            <div className="flex gap-8">
+            <div className="flex flex-wrap gap-4 sm:gap-8">
               <span>Privacy Policy</span>
               <span>Terms of Service</span>
               <span>Contact Support</span>

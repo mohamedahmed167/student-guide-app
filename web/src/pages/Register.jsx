@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { userContext } from "../context/context";
 import { getDepartments, yearLabelToLevel } from "../api";
+import { persistTokensFromData } from "../api/client";
 import axios from "axios";
 import { env } from "../environment/environment";
 
@@ -14,6 +15,7 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [includeInviteCode, setIncludeInviteCode] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [departments, setDepartments] = useState([]);
@@ -66,31 +68,36 @@ function Register() {
     setLoading(true);
 
     try {
+      const submittedData = {
+        username: register.username.trim(),
+        email: register.email.trim(),
+        password,
+        full_name: register.FullName.trim(),
+        department: register.departmentId,
+        current_level: yearLabelToLevel(register.year),
+      };
+
+      if (includeInviteCode) {
+        submittedData["Invite code"] = "LEADER_SECRET_2026";
+      }
+
       const response = await axios.post(
-        `${ env.baseUrl }/register/`,
-        {
-          username: register.username.trim(),
-          email: register.email.trim(),
-          password,
-          full_name: register.FullName.trim(),
-          department: register.departmentId,
-          current_level: yearLabelToLevel(register.year),
-        },
+        `${ env.baseUrl }${ env.endpoints.register }`,
+        submittedData,
         {
           withCredentials: true,
         }
       );
 
       console.log(response.data);
+      persistTokensFromData(response.data);
 
       if (response.data.user) {
         loginUser(response.data.user);
       }
       navigate("/dashboard");
     } catch (err) {
-      console.error("Register error:", err);
-    
-      // need modify from backend 
+      console.error("Register error:", err.response);
       setError(
         err.response?.data?.message ||
         err.response?.data?.error ||
@@ -103,15 +110,15 @@ function Register() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#F8F7FB] p-4 sm:p-8 font-sans">
-      <div className="relative w-full max-w-[650px] mt-10 sm:mt-0">
-        <div className="bg-white rounded-[40px] shadow-[0_20px_40px_rgba(0,0,0,0.04)] p-8 sm:p-10 relative z-0">
+      <div className="relative w-full max-w-[650px] mt-8 sm:mt-0">
+        <div className="bg-white rounded-[28px] sm:rounded-[40px] shadow-[0_20px_40px_rgba(0,0,0,0.04)] p-6 sm:p-10 relative z-0">
           <div className="flex items-center justify-center gap-3 mb-8">
             <FaGraduationCap className="text-[#3B44B3] text-[32px]" />
             <span className="text-[#2A2744] text-[22px] font-bold">Student Guide</span>
           </div>
 
           <div className="text-center mb-10">
-            <h1 className="text-[32px] font-extrabold text-[#2A2744] tracking-tight">
+            <h1 className="text-[28px] sm:text-[32px] font-extrabold text-[#2A2744] tracking-tight">
               Create an Account
             </h1>
             <p className="text-[#64617A] mt-2.5 text-[16px] font-medium leading-relaxed">
@@ -277,6 +284,30 @@ function Register() {
                 Passwords do not match
               </div>
             )}
+
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-[#EBE8F4] rounded-[20px] px-5 py-4">
+              <div className="min-w-0">
+                <p className="text-[14px] font-bold text-[#44415B]">Use invite code</p>
+                <p className="text-[13px] font-medium text-[#64617A]">
+                  {includeInviteCode ? "Invite code will be submitted add this user become admin" : "Register without invite code to be admin"}
+                </p>
+              </div>
+              <button
+                type="button"
+                aria-label="Toggle invite code"
+                aria-pressed={includeInviteCode}
+                onClick={() => setIncludeInviteCode((value) => !value)}
+                className={`relative h-8 w-14 shrink-0 rounded-full transition-colors ${
+                  includeInviteCode ? "bg-[#6370E8]" : "bg-[#B9B5C8]"
+                }`}
+              >
+                <span
+                  className={`absolute left-0 top-1 h-6 w-6 rounded-full bg-white shadow-sm transition-transform ${
+                    includeInviteCode ? "translate-x-7" : "translate-x-1"
+                  }`}
+                />
+              </button>
+            </div>
 
             <button
               type="submit"

@@ -64,13 +64,14 @@ export function UserProvider({children}) {
                 parsed.coursework = defaultUser.coursework;
             }
             return parsed;
-        } catch (e) {
+        } catch (err) {
+            console.log(err)
             return null;
         }
     });
     
     const [isloggedIn, setIsLoggedIn] = useState(() => {
-        return !!localStorage.getItem('token') || !!localStorage.getItem('access_token');
+        return !!localStorage.getItem('access_token');
     });
 
     const [apiLoading, setApiLoading] = useState(false);
@@ -160,7 +161,7 @@ export function UserProvider({children}) {
     });
 
     const refreshFromApi = useCallback(async () => {
-        if (!localStorage.getItem('token') && !localStorage.getItem('access_token')) return;
+        if (!localStorage.getItem('access_token')) return;
 
         setApiLoading(true);
         try {

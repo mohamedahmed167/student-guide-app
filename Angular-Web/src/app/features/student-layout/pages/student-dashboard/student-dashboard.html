@@ -1,0 +1,18 @@
+<section class="student-dashboard" aria-labelledby="student-title">
+  @if (isLoading()) { <p class="state">Loading your dashboard…</p> }
+  @else if (error()) { <p class="state error">{{ error() }} <button type="button" (click)="load()">Try again</button></p> }
+  @else if (profile(); as user) {
+    <header><div><p class="eyebrow">STUDENT DASHBOARD</p><h1 id="student-title">Welcome back, {{ user.full_name }}</h1>@if (hasSchedulesData()) { <p>{{ schedules().length }} class{{ schedules().length === 1 ? '' : 'es' }} today.</p> }</div><time>{{ now | date:'MMMM d, y' }}</time></header>
+    @if (unavailableSources().length) { <p class="api-warning">Could not load: {{ unavailableSources().join(', ') }}. The remaining profile data is still available.</p> }
+    <div class="metrics">
+      @if (user.current_cgpa !== undefined && user.current_cgpa !== null) { <article><span>Current GPA</span><strong>{{ user.current_cgpa }}</strong><small>{{ user.total_credits || 0 }} earned credits</small></article> }
+      @if (user.subjects !== undefined) { <article><span>Subjects</span><strong>{{ user.subjects.length }}</strong><small>Enrolled subjects</small></article> }
+      @if (nextLecture(); as lecture) { <article><span>Next Lecture</span><strong class="metric-name">{{ lecture.subject.name }}</strong><small>{{ formatTime(lecture.start_time) }}</small></article> }
+      @if (hasExamsData()) { <article><span>Upcoming Exams</span><strong>{{ exams().length }}</strong>@if (exams().length) { <small>Next: {{ exams()[0].exam_date | date:'MMM d' }}</small> }</article> }
+    </div>
+    <div class="content">
+      @if (hasSchedulesData()) { <section class="panel schedule"><header><h2>Today's Schedule</h2><span>{{ now | date:'EEEE' }}</span></header>@for (item of schedules(); track item.schedule_id) { <article><time>{{ formatTime(item.start_time) }}</time><div><h3>{{ item.subject.name }}</h3><p>{{ item.hall_location }}@if (item.doctor_name) { · {{ item.doctor_name }} }</p></div></article> } @empty { <p class="empty-panel p-3">No classes returned for today.</p> }</section> }
+      @if (hasTodosData()) { <section class="panel tasks"><header><h2>Quick Tasks</h2></header>@for (task of todos(); track task.todo_id) { <article [class.done]="task.is_completed"><span>{{ task.is_completed ? '✓' : '○' }}</span>{{ task.task_name }}</article> } @empty { <p class="empty-panel p-3">No tasks returned by your profile.</p> }</section> }
+    </div>
+  }
+</section>

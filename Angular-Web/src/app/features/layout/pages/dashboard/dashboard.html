@@ -1,0 +1,24 @@
+<section class="dashboard" aria-labelledby="dashboard-title">
+  <header class="dashboard__header"><div><p class="eyebrow">OVERVIEW</p><h1 id="dashboard-title">Admin Dashboard</h1><p>Live information for your cohort.</p></div><button type="button" class="refresh" [disabled]="isLoading()" (click)="loadDashboard()">{{ isLoading() ? 'Refreshing…' : 'Refresh data' }}</button></header>
+
+  @if (error()) { <div class="notice"><span>{{ error() }}</span><button type="button" (click)="loadDashboard()">Try again</button></div> }
+  @if (isLoading()) { <p class="state-message">Loading your dashboard…</p> }
+  @else {
+    <div class="metric-grid">
+      <article class="metric-card metric-card--students"><span class="metric-icon">●</span><div><p>Total Students</p><strong>{{ studentsCount() }}</strong><small>Registered students</small></div></article>
+      <article class="metric-card metric-card--schedule"><span class="metric-icon">▣</span><div><p>Active Schedules</p><strong>{{ schedulesCount() }}</strong><small>Classes for your cohort</small></div></article>
+      <article class="metric-card metric-card--announcements"><span class="metric-icon">◉</span><div><p>Announcements Sent</p><strong>{{ announcements().length }}</strong><small>Updates for your cohort</small></div></article>
+    </div>
+
+    <div class="dashboard-grid">
+      <section class="panel announcements-panel" aria-labelledby="recent-title"><header class="panel__header"><div><h2 id="recent-title">Recent Announcements</h2><p>Latest updates from your cohort</p></div><a routerLink="/announcements">View all</a></header>
+        <div class="announcement-list">@for (announcement of announcements(); track announcement.message_id) {
+          <article class="announcement-row"><span class="row-avatar">{{ (announcement.sender_name || 'A').slice(0, 1).toUpperCase() }}</span><div><h3>{{ announcement.sender_name || 'Admin' }}</h3><p>{{ announcement.content }}</p><time>{{ announcement.created_at | date:'MMM d, y · h:mm a' }}</time></div></article>
+        } @empty { <div class="empty-list"><h3>No announcements yet</h3><p>Send an update when your cohort needs one.</p><a routerLink="/announcements">Create announcement</a></div> }</div>
+      </section>
+
+      <aside class="side-panel"><section class="panel quick-actions"><header class="panel__header"><div><h2>Quick Actions</h2><p>Manage your cohort</p></div></header><a class="action action--primary" routerLink="/schedule">Add Lecture <span>→</span></a><a class="action" routerLink="/announcements">Send Announcement <span>→</span></a><a class="action" routerLink="/schedule">View Schedule <span>→</span></a></section>
+      <section class="panel data-note"><h2>Everything here is live</h2><p>Metrics and announcements come directly from your Student Guide backend—no placeholder activity.</p></section></aside>
+    </div>
+  }
+</section>

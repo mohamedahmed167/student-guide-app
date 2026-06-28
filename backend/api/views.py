@@ -12,9 +12,11 @@ from .serializers import (
     DepartmentSerializer, StudentSerializer, SubjectSerializer, 
     ScheduleSerializer, ExamSerializer, TodoSerializer,
     RegisterSerializer, StudentMeSerializer, 
-    StudentUpdateSerializer, ChangePasswordSerializer,VerifyOTPSerializer, 
-    CohortMessageSerializer ,ChangePasswordWithOTPSerializer
+    StudentUpdateSerializer, ChangePasswordSerializer, 
+    CohortMessageSerializer ,ChangePasswordWithOTPSerializer, LoginSerializer
 )
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework import generics
 import random
 from django.conf import settings
@@ -25,6 +27,7 @@ from django.contrib.auth import logout
 
 class DepartmentViewSet(viewsets.ModelViewSet):
     queryset = Department.objects.all()
+    permission_classes = [AllowAny]
     serializer_class = DepartmentSerializer
 
 class StudentViewSet(viewsets.ModelViewSet):
@@ -33,6 +36,7 @@ class StudentViewSet(viewsets.ModelViewSet):
 
 class SubjectViewSet(viewsets.ModelViewSet):
     queryset = Subject.objects.all()
+    permission_classes = [AllowAny]
     serializer_class = SubjectSerializer
 
 class ScheduleViewSet(viewsets.ModelViewSet):
@@ -130,9 +134,7 @@ class RegisterView(generics.CreateAPIView):
         )
         return response
 
-class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    password = serializers.CharField(style={'input_type': 'password'})
+
 
 class LoginWithCookieView(APIView):
     permission_classes = (AllowAny,)
@@ -142,36 +144,45 @@ class LoginWithCookieView(APIView):
         username = request.data.get('username')
         password = request.data.get('password')
         user = authenticate(username=username, password=password)
-
         if user is not None:
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
             refresh_token = str(refresh)
-
             student_data = StudentMeSerializer(user.student_profile).data
-
             response = Response({
                 "message": "Login Successfully!",
                 "student": student_data
             }, status=status.HTTP_200_OK)
 
-            response.set_cookie(key='access_token', value=access_token, httponly=True, samesite='Lax', max_age=3600)
-            response.set_cookie(key='refresh_token', value=refresh_token, httponly=True, samesite='Lax', max_age=86400)
+            response.set_cookie(key='access_token', value=access_token, httponly=True, samesite='None', secure=True, max_age=86400)
+            response.set_cookie(key='refresh_token', value=refresh_token, httponly=True, samesite='None', secure=True, max_age=604800)
             return response
         else:
             return Response({"error": "Incorrect Username or Password"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class LogoutView(APIView):
-    permission_classes = [IsAuthenticated] 
-
+    permission_classes = [AllowAny]
     def post(self, request):
-        if hasattr(request.user, 'auth_token'):
-            request.user.auth_token.delete()
-            
-        logout(request)
-        
-        return Response({"message": "Logout Successfully!"}, status=status.HTTP_200_OK)
+        response = Response({"message": "Logout Successfully!"}, status=status.HTTP_200_OK)
+        response.set_cookie(
+            key='access_token',
+            value='',
+            max_age=0,
+            path='/',
+            samesite='None',
+            secure=True
+        )
+        response.set_cookie(
+            key='refresh_token',
+            value='',
+            max_age=0,
+            path='/',
+            samesite='None',
+            secure=True
+        )     
+        return response
+
 
 class MeView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -199,38 +210,7 @@ class ChangePasswordView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class VerifyOTPView(GenericAPIView):
-    permission_classes = [] 
-    
-    serializer_class = VerifyOTPSerializer 
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data) 
-        
-        if serializer.is_valid():
-            email = serializer.validated_data['email']
-            otp_code = serializer.validated_data['otp_code']
-            
-            try:
-                user = User.objects.get(email=email)
-                student_profile = user.student_profile
-                
-                if student_profile.otp_code == otp_code:
-                    user.is_active = True 
-                    user.save()
-                    
-                    student_profile.otp_code = None
-                    student_profile.save()
-                    
-                    return Response({"message": "Account activated successfully!"}, status=status.HTTP_200_OK)
-                else:
-                    return Response({"error": "Invalid activation code."}, status=status.HTTP_400_BAD_REQUEST)
-                    
-            except User.DoesNotExist:
-                return Response({"error": "User with this email does not exist."}, status=status.HTTP_404_NOT_FOUND)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
 class IsLeaderToChat(permissions.BasePermission):
     message = "You do not have permission to perform this action."
@@ -324,4 +304,35 @@ class ChangePasswordWithOTPView(generics.GenericAPIView):
                 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-18475823
+class CustomTokenRefreshView(TokenRefreshView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        refresh_token = request.COOKIES.get('refresh_token')
+        
+        if not refresh_token:
+            return Response({"error": "Refresh token is missing."}, status=status.HTTP_400_BAD_REQUEST)
+            
+        data = request.data.copy()
+        data['refresh'] = refresh_token
+        serializer = self.get_serializer(data=data)
+
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError as e:
+            raise InvalidToken(e.args[0])
+
+        access_token = serializer.validated_data.get('access')
+        
+        response = Response({"message": "Token refreshed successfully!"}, status=status.HTTP_200_OK)
+        
+        response.set_cookie(
+            key='access_token',
+            value=access_token,
+            httponly=True,
+            samesite='None',
+            secure=True,
+            max_age=86400 
+        )
+        
+        return response
